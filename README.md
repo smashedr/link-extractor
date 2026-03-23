@@ -26,17 +26,18 @@
 # Link Extractor
 
 <a title="Link Extractor" href="https://link-extractor.cssnr.com/" target="_blank">
-<img alt="Link Extractor" align="right" width="128" height="auto" src="https://raw.githubusercontent.com/cssnr/link-extractor/master/src/images/logo128.png"></a>
+<img alt="Link Extractor" align="right" width="128" height="auto" src="https://raw.githubusercontent.com/smashedr/link-extractor/master/public/images/logo128.png"></a>
 
 - [Development](#development)
 - [Contributing](#contributing)
 
 > [!CAUTION]  
-> This is the development version of [cssnr/link-extractor](https://github.com/cssnr/link-extractor).
+> This is the development version of [cssnr/link-extractor](https://github.com/cssnr/link-extractor).  
+> For more details, see the [Discussion](https://github.com/cssnr/link-extractor/discussions/134).
 
-[![Latest Release](https://img.shields.io/github/v/release/smashedr/link-extractor?style=for-the-badge&logo=github)](https://github.com/smashedr/link-extractor/releases/latest)
+[![Latest Release](https://img.shields.io/github/v/release/smashedr/link-extractor?style=for-the-badge&logo=github&label=download%20latest%20release)](https://github.com/smashedr/link-extractor/releases/latest)
 
-First, Download a [release from GitHub](https://github.com/cssnr/smashedr/releases/latest) for your browser.
+First, Download a [GitHub release](https://github.com/smashedr/link-extractor/releases) for your browser.
 
 Then, Install it locally by completing these additional steps.
 

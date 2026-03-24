@@ -10,7 +10,7 @@ import ExtractPanel from '@/components/ExtractPanel.vue'
 
 const tabAccess = ref(true)
 
-const isBrowser = isFirefox ? '420px' : null
+const isBrowser = isFirefox ? '360px' : null
 const width = computed(() => (isMobile ? '100%' : isBrowser))
 console.log('width:', width.value)
 
@@ -48,7 +48,7 @@ onMounted(async () => {
     <div class="d-grid gap-2 p-1">
       <PermsCheck />
 
-      <!-- Note: Consider moving tabAccess to ExtractPanel -->
+      <!--Note: Consider moving tabAccess to ExtractPanel-->
       <ExtractPanel v-if="tabAccess" :close-window="true" />
       <div v-else class="text-center text-ellipsis border border-danger border-2 rounded p-1 mb-2">
         {{ getMsg('NoTabAccess') }}.

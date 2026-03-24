@@ -75,7 +75,7 @@ useTitle('Options')
         }}</CopySupport>
 
         <hr class="mt-0" />
-        <PageFooter />
+        <PageFooter class="mb-2" />
       </div>
     </div>
   </div>

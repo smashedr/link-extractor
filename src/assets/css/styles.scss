@@ -3,12 +3,18 @@
 @import 'bootstrap/scss/bootstrap';
 //@import 'bootswatch/dist/zephyr/bootswatch';
 
-@supports (scrollbar-gutter: stable both-edges) {
-    html {
-        scrollbar-gutter: stable;
-    }
+//@supports (scrollbar-gutter: stable both-edges) {
+//    html {
+//        scrollbar-gutter: stable;
+//    }
+//
+//    body {
+//        padding-right: 0 !important;
+//    }
+//}
 
-    body {
-        padding-right: 0 !important;
-    }
-}
+//@supports (scrollbar-gutter: stable both-edges) {
+//    body.modal-open {
+//        padding-right: 0 !important;
+//    }
+//}

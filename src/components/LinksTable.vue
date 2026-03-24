@@ -16,11 +16,12 @@ function onChanged(changes: object) {
   }
 }
 
+// NOTE: Make a useResults.ts composable or a reusable function...
 onMounted(async () => {
   chrome.storage.local.onChanged.addListener(onChanged)
   const { results } = await chrome.storage.local.get('results')
   console.debug('%cMOUNTED: components/LinksTable.vue:', 'color: Lime', results)
-  links.value = results as LinkData[]
+  links.value = (results || []) as LinkData[]
 })
 onUnmounted(() => {
   chrome.storage.local.onChanged.removeListener(onChanged)
@@ -33,7 +34,7 @@ onUnmounted(() => {
       <table id="links-table" class="table table-sm table-striped table-hover small w-100">
         <thead class="">
           <tr>
-            <th>Links - {{ links.length }}</th>
+            <th>Links - {{ links?.length || 0 }}</th>
             <!--<th>Text</th>-->
             <!--<th>Title</th>-->
             <!--<th>Label</th>-->
@@ -42,13 +43,16 @@ onUnmounted(() => {
           </tr>
         </thead>
         <tbody id="links-body">
-          <tr v-if="links" v-for="link of links">
+          <tr v-if="links?.length" v-for="link of links">
             <td>{{ link.href }}</td>
             <!--<td>Text</td>-->
             <!--<td>Title</td>-->
             <!--<td>Label</td>-->
             <!--<td>Rel</td>-->
             <!--<td>Target</td>-->
+          </tr>
+          <tr v-else>
+            <td class="text-muted fw-bold">No Links Extracted</td>
           </tr>
         </tbody>
       </table>

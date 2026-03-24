@@ -1,6 +1,6 @@
-import { openExtPanel, openPage, openPopup, openSidePanel } from '@/utils/extension.ts'
+import { openExtPanel, openPopup, openSidePanel } from '@/utils/extension.ts'
 import { Options, defaultOptions, getOptions } from '@/utils/options.ts'
-import { extractSelectionLinks, extractTabs } from '@/utils/links.ts'
+import { extractSelectionLinks, extractAndOpen } from '@/utils/links.ts'
 import { createContextMenus } from './menus.ts'
 import { isFirefox } from '@/utils/system.ts'
 
@@ -25,7 +25,7 @@ async function onInstalled(details: chrome.runtime.InstalledDetails) {
   options = await setDefaultOptions(defaultOptions)
   console.debug('options:', options)
 
-  if (options.contextMenu) createContextMenus()
+  createContextMenus(options)
 
   const manifest = chrome.runtime.getManifest()
   console.debug('manifest:', manifest)
@@ -62,7 +62,7 @@ async function onStartup() {
     // NOTE: Confirm these checks are still necessary...
     options = await getOptions()
     console.debug('options:', options)
-    if (options.contextMenu) createContextMenus()
+    createContextMenus(options)
 
     const manifest = chrome.runtime.getManifest()
     console.debug('manifest:', manifest)
@@ -70,7 +70,24 @@ async function onStartup() {
   }
 }
 
-// NOTE: Below is ported from VanillaJS
+async function setDefaultOptions(defaultOptions: object) {
+  console.log('setDefaultOptions', defaultOptions)
+  options = await getOptions()
+  let changed = false
+  for (const [key, value] of Object.entries(defaultOptions)) {
+    // console.log(`${key}: default: ${value} current: ${options[key]}`)
+    if (options[key] === undefined) {
+      changed = true
+      options[key] = value
+      console.log(`Set %c${key}:`, 'color: Khaki', value)
+    }
+  }
+  if (changed) {
+    await chrome.storage.sync.set({ options })
+    console.log('changed options:', options)
+  }
+  return options
+}
 
 function onMessage(
   message: any,
@@ -90,8 +107,8 @@ function onChanged(changes: object, namespace: string) {
       options = newValue
       if (oldValue.contextMenu !== newValue.contextMenu) {
         if (newValue?.contextMenu) {
-          console.log('%c Enabled contextMenu...', 'color: Lime')
-          createContextMenus()
+          console.log('%c Enabled contextMenu...', 'color: SpringGreen')
+          createContextMenus(newValue)
         } else {
           console.log('%c Disabled contextMenu...', 'color: OrangeRed')
           chrome.contextMenus?.removeAll()
@@ -109,6 +126,8 @@ async function onCommand(command: string, tab?: chrome.tabs.Tab) {
     await openExtPanel()
   } else if (command === 'openSidePanel') {
     openSidePanel()
+  } else if (command === 'cmdExtractAll') {
+    await extractAndOpen(options)
   } else {
     console.warn(`Unknown Command: ${command}`)
   }
@@ -137,58 +156,11 @@ async function onClicked(ctx: chrome.contextMenus.OnClickData, tab?: chrome.tabs
       console.log('result:', result)
     } else if (ctx.menuItemId === 'ctxExtLinks') {
       console.log(`%c ${ctx.menuItemId}`, 'color: Lime')
-
-      // getOptions().then((options) => {
-      //   if (options.contextMenu) openSidePanel()
-      // })
-
-      // const options = await getOptions()
-
-      // if (options.contextMenu) {
-      //   openSidePanel().then(() =>
-      //     extractTabs().then((results) => processResults(results)),
-      //   )
-      // }
-
-      if (options.extractSide) {
-        openSidePanel()
-      } else {
-        openPage().catch(console.warn)
-      }
-      extractTabs().then((results) => processResults(results))
+      await extractAndOpen(options)
     } else {
       console.log(`Unknown ctx.menuItemId: ${ctx.menuItemId}`)
     }
   } catch (e) {
     console.warn(e)
   }
-}
-
-// NOTE: Temporary Function
-async function processResults(results: LinkData[]) {
-  console.log('processResults:', results)
-  chrome.storage.local.set({ results }).then(() => console.log('results set...'))
-  // chrome.runtime
-  //   .sendMessage({ results })
-  //   .then(() => console.log('message sent...'))
-  //   .catch(console.warn)
-}
-
-async function setDefaultOptions(defaultOptions: object) {
-  console.log('setDefaultOptions', defaultOptions)
-  options = await getOptions()
-  let changed = false
-  for (const [key, value] of Object.entries(defaultOptions)) {
-    // console.log(`${key}: default: ${value} current: ${options[key]}`)
-    if (options[key] === undefined) {
-      changed = true
-      options[key] = value
-      console.log(`Set %c${key}:`, 'color: Khaki', value)
-    }
-  }
-  if (changed) {
-    await chrome.storage.sync.set({ options })
-    console.log('changed options:', options)
-  }
-  return options
 }

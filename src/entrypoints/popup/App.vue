@@ -19,10 +19,10 @@ async function checkTab(): Promise<boolean> {
   console.log('tab:', tab)
   if (!tab.id) return false
   try {
-    const results = await browser.scripting.executeScript({
+    const results = await chrome.scripting.executeScript({
       target: { tabId: tab.id },
       injectImmediately: true,
-      func: () => true as unknown as void,
+      func: () => true,
     })
     console.log('results:', results)
     return results[0]?.result === true

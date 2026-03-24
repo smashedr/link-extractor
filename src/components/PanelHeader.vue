@@ -48,7 +48,7 @@ console.log('config:', config)
         <a
           :title="getMsg('ReleaseNotes')"
           class="link-body-emphasis text-decoration-none small ms-1"
-          :href="`${manifest.homepage_url}/releases/tag/${manifest.version}`"
+          :href="`${config.github_url}/releases/tag/${manifest.version}`"
           target="_blank"
           @click.prevent="clickOpen($event, closeWindow)"
         >

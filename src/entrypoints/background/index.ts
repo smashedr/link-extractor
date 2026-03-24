@@ -21,7 +21,8 @@ export default defineBackground(() => {
 
 async function setUninstallURL() {
   const manifest = chrome.runtime.getManifest()
-  const url = new URL(`${manifest.homepage_url}uninstall/`)
+  const url = new URL(`${manifest.homepage_url}`)
+  url.pathname = '/uninstall/'
   url.searchParams.append('version', manifest.version)
   await chrome.runtime.setUninstallURL(url.href)
   console.debug(`setUninstallURL: ${url.href}`)

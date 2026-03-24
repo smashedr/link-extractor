@@ -65,7 +65,7 @@ async function extractLinks() {
             <a class="dropdown-item text-truncate" href="#">{{ fmtName(filter) }}</a>
           </li>
           <li v-else>
-            <a class="dropdown-item" href="/options.html" @click.prevent="openOptions(true)">{{
+            <a class="dropdown-item" href="/options.html" @click.prevent="openOptions(props.closeWindow)">{{
               getMsg('NoSavedFilters')
             }}</a>
           </li>

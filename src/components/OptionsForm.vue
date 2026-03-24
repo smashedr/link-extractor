@@ -46,7 +46,7 @@ onMounted(() => {
 <template>
   <form>
     <!-- text inputs -->
-    <div v-if="show.includes('inputs')" class="row m-0 mb-2 g-1">
+    <div v-if="show.includes('inputs')" class="row m-0 g-1">
       <div class="col-12">
         <label for="flags" class="form-label"><i class="fa-solid fa-code me-1"></i> Regex Flags</label>
         <i
@@ -69,7 +69,7 @@ onMounted(() => {
     </div>
 
     <!-- switches -->
-    <div v-if="show.includes('switches')" class="mb-2 row m-0">
+    <div v-if="show.includes('switches')" class="row m-0">
       <template v-for="option in toggleOptions" :key="option.key">
         <FormSwitch
           :class="{ 'col-12': true, 'col-sm-6': !compact }"

@@ -171,11 +171,11 @@ export async function processLinks(links: LinkData[]) {
   //   links = links.filter((item) => item.href.match(re))
   // }
 
-  // If no items, alert and return
-  if (!links.length) {
-    alert('No Results')
-    // return window.close()
-  }
+  // // If no items, alert and return
+  // if (!links.length) {
+  //   alert('No Results')
+  //   // return window.close()
+  // }
 
   // // Update links if onlyDomains is not set
   // if (!onlyDomains) {

@@ -19,10 +19,10 @@ async function checkTab(): Promise<boolean> {
   console.log('tab:', tab)
   if (!tab.id) return false
   try {
-    const results = await browser.scripting.executeScript({
+    const results = await chrome.scripting.executeScript({
       target: { tabId: tab.id },
       injectImmediately: true,
-      func: () => true as unknown as void,
+      func: () => true,
     })
     console.log('results:', results)
     return results[0]?.result === true
@@ -45,17 +45,17 @@ onMounted(async () => {
   <div id="popupContainer">
     <PanelHeader :close-window="true" :popup-button="false" />
 
-    <div class="d-grid gap-2 p-1">
-      <PermsCheck />
+    <div class="d-grid gap-2 p-2">
+      <PermsCheck :close-window="true" />
 
       <!--Note: Consider moving tabAccess to ExtractPanel-->
       <ExtractPanel v-if="tabAccess" :close-window="true" />
       <div v-else class="text-center text-ellipsis border border-danger border-2 rounded p-1 mb-2">
         {{ getMsg('NoTabAccess') }}.
       </div>
-    </div>
 
-    <OptionsForm :show="['switches']" :compact="true" class="p-2" />
+      <OptionsForm :show="['switches']" :compact="true" />
+    </div>
 
     <ToastAlerts />
   </div>

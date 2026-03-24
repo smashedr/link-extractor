@@ -9,7 +9,7 @@
 [![Edge Add-on Version](https://img.shields.io/badge/dynamic/json?label=microsoft&logo=leptos&logoColor=2bc3d2&&query=%24.version&url=https%3A%2F%2Fmicrosoftedge.microsoft.com%2Faddons%2Fgetproductdetailsbycrxid%2Fnmndaimimedljcfgnnoahempcajdamej)](https://microsoftedge.microsoft.com/addons/detail/link-extractor/nmndaimimedljcfgnnoahempcajdamej)
 [![GitHub Release Version](https://img.shields.io/github/v/release/cssnr/link-extractor?logo=github)](https://github.com/cssnr/link-extractor/releases/latest)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=cssnr_link-extractor&metric=alert_status&label=quality)](https://sonarcloud.io/summary/overall?id=cssnr_link-extractor)
-[![Workflow Release](https://img.shields.io/github/actions/workflow/status/cssnr/link-extractor/release.yaml?logo=norton&logoColor=white&label=release)](https://github.com/cssnr/link-extractor/actions/workflows/release.yaml)
+[![Workflow Build](https://img.shields.io/github/actions/workflow/status/cssnr/link-extractor/build.yaml?logo=norton&logoColor=white&label=build)](https://github.com/cssnr/link-extractor/actions/workflows/build.yaml)
 [![Workflow Lint](https://img.shields.io/github/actions/workflow/status/cssnr/link-extractor/lint.yaml?logo=norton&logoColor=white&label=lint)](https://github.com/cssnr/link-extractor/actions/workflows/lint.yaml)
 [![GitHub Last Commit](https://img.shields.io/github/last-commit/cssnr/link-extractor?logo=listenhub&label=updated)](https://github.com/cssnr/link-extractor/pulse)
 [![GitHub Repo Size](https://img.shields.io/github/repo-size/cssnr/link-extractor?logo=buffer&label=repo%20size)](https://github.com/cssnr/link-extractor?tab=readme-ov-file#readme)
@@ -32,8 +32,10 @@
 - [Contributing](#contributing)
 
 > [!CAUTION]  
-> This is the development version of [cssnr/link-extractor](https://github.com/cssnr/link-extractor).  
+> Development version of [cssnr/link-extractor](https://github.com/cssnr/link-extractor).  
 > For more details, see the [Discussion](https://github.com/cssnr/link-extractor/discussions/134).
+
+Note, this is not yet ready for use but can be installed and tested.
 
 [![Latest Release](https://img.shields.io/github/v/release/smashedr/link-extractor?style=for-the-badge&logo=github&label=download%20latest%20release)](https://github.com/smashedr/link-extractor/releases/latest)
 
@@ -46,6 +48,9 @@ Then, Install it locally by completing these additional steps.
 - [Microsoft Edge](https://learn.microsoft.com/en-us/microsoft-edge/extensions/getting-started/extension-sideloading#locally-installing-and-running-an-extension)
 
 ## Development
+
+[![Framework](https://img.shields.io/badge/framework-wxt-darkgreen?style=for-the-badge&logo=wxt)](https://github.com/wxt-dev/wxt)
+[![GitHub Top Language](https://img.shields.io/github/languages/top/smashedr/link-extractor?style=for-the-badge&logo=devbox)](https://github.com/smashedr/link-extractor/tree/master/src)
 
 To get started, see the [CONTRIBUTING.md](#contributing-ov-file).
 

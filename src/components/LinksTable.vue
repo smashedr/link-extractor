@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted } from 'vue'
-import { LinkData } from '@/utils/links.ts'
+import { LinkData, processLinks } from '@/utils/links.ts'
 
 console.debug('%cLOADED: components/LinksTable.vue', 'color: Orange')
 
@@ -20,8 +20,12 @@ function onChanged(changes: object) {
 onMounted(async () => {
   chrome.storage.local.onChanged.addListener(onChanged)
   const { results } = await chrome.storage.local.get('results')
-  console.debug('%cMOUNTED: components/LinksTable.vue:', 'color: Lime', results)
-  links.value = (results || []) as LinkData[]
+  console.debug('%cMOUNTED: components/LinksTable.vue:', 'color: Lime')
+  const linkData = (results || []) as LinkData[]
+  console.debug('linkData:', linkData)
+  const processed = await processLinks(linkData)
+  console.debug('processed:', processed)
+  links.value = processed
 })
 onUnmounted(() => {
   chrome.storage.local.onChanged.removeListener(onChanged)
@@ -35,21 +39,11 @@ onUnmounted(() => {
         <thead class="">
           <tr>
             <th>Links - {{ links?.length || 0 }}</th>
-            <!--<th>Text</th>-->
-            <!--<th>Title</th>-->
-            <!--<th>Label</th>-->
-            <!--<th>Rel</th>-->
-            <!--<th>Target</th>-->
           </tr>
         </thead>
         <tbody id="links-body">
           <tr v-if="links?.length" v-for="link of links">
             <td>{{ link.href }}</td>
-            <!--<td>Text</td>-->
-            <!--<td>Title</td>-->
-            <!--<td>Label</td>-->
-            <!--<td>Rel</td>-->
-            <!--<td>Target</td>-->
           </tr>
           <tr v-else>
             <td class="text-muted fw-bold">No Links Extracted</td>

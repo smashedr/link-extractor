@@ -43,52 +43,54 @@ async function extractLinks() {
 </script>
 
 <template>
-  <div class="btn-group btn-group-sm" role="group" aria-label="Button group with nested dropdown">
-    <button @click.prevent="extractLinks" type="button" class="btn btn-success">
-      <i class="fa-solid fa-link me-1"></i> {{ getMsg('AllLinks') }}
-    </button>
-    <button type="button" class="btn btn-primary">
-      <i class="fa-solid fa-globe me-1"></i> {{ getMsg('Domains') }}
-    </button>
-    <div class="btn-group btn-group-sm" role="group">
-      <button
-        type="button"
-        class="btn btn-outline-success dropdown-toggle"
-        data-bs-toggle="dropdown"
-        aria-expanded="false"
-      >
-        {{ getMsg('Filters') }}
+  <div>
+    <div class="btn-group btn-group-sm w-100 mb-1" role="group" aria-label="Button group with nested dropdown">
+      <button @click.prevent="extractLinks" type="button" class="btn btn-success flex-grow-1">
+        <i class="fa-solid fa-link me-1"></i> {{ getMsg('AllLinks') }}
       </button>
-      <ul class="dropdown-menu overflow-y-auto overflow-x-hidden">
-        <li v-if="filters?.length" v-for="filter of filters">
-          <a class="dropdown-item text-truncate" href="#">{{ fmtName(filter) }}</a>
-        </li>
-        <li v-else>
-          <a class="dropdown-item" href="/options.html" @click.prevent="openOptions(true)">{{
-            getMsg('NoSavedFilters')
-          }}</a>
-        </li>
-      </ul>
+      <button type="button" class="btn btn-primary flex-grow-1">
+        <i class="fa-solid fa-globe me-1"></i> {{ getMsg('Domains') }}
+      </button>
+      <div class="btn-group btn-group-sm" role="group">
+        <button
+          type="button"
+          class="btn btn-outline-success dropdown-toggle"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+        >
+          {{ getMsg('Filters') }}
+        </button>
+        <ul class="dropdown-menu overflow-y-auto overflow-x-hidden">
+          <li v-if="filters?.length" v-for="filter of filters">
+            <a class="dropdown-item text-truncate" href="#">{{ fmtName(filter) }}</a>
+          </li>
+          <li v-else>
+            <a class="dropdown-item" href="/options.html" @click.prevent="openOptions(props.closeWindow)">{{
+              getMsg('NoSavedFilters')
+            }}</a>
+          </li>
+        </ul>
+      </div>
     </div>
-  </div>
 
-  <form @submit.prevent="onSubmit" id="filter-form">
-    <label for="filter-input" class="visually-hidden">{{ getMsg('QuickFilter') }}</label>
-    <div class="input-group input-group-sm">
-      <input
-        id="filter-input"
-        type="text"
-        class="form-control form-control-sm"
-        :placeholder="getMsg('QuickFilter')"
-        :aria-label="getMsg('QuickFilter')"
-        aria-describedby="submit-filter"
-        autocomplete="off"
-        autofocus
-        required
-      />
-      <button class="btn btn-outline-success" type="submit" id="submit-filter">{{ getMsg('Go') }}</button>
-    </div>
-  </form>
+    <form @submit.prevent="onSubmit" id="filter-form">
+      <label for="filter-input" class="visually-hidden">{{ getMsg('QuickFilter') }}</label>
+      <div class="input-group input-group-sm">
+        <input
+          id="filter-input"
+          type="text"
+          class="form-control form-control-sm"
+          :placeholder="getMsg('QuickFilter')"
+          :aria-label="getMsg('QuickFilter')"
+          aria-describedby="submit-filter"
+          autocomplete="off"
+          autofocus
+          required
+        />
+        <button class="btn btn-outline-success" type="submit" id="submit-filter">{{ getMsg('Go') }}</button>
+      </div>
+    </form>
+  </div>
 </template>
 
 <style scoped>

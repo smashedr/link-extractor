@@ -24,6 +24,9 @@ withDefaults(
 )
 
 const manifest = chrome.runtime.getManifest()
+console.log('manifest:', manifest)
+const config = useAppConfig()
+console.log('config:', config)
 </script>
 
 <template>
@@ -40,12 +43,12 @@ const manifest = chrome.runtime.getManifest()
           @click.prevent="clickOpen($event, closeWindow)"
         >
           <img src="/images/logo32.png" alt="L" class="mb-1" style="height: 1.1em" />
-          {{ manifest.name }}</a
+          {{ config.short_name }}</a
         >
         <a
           :title="getMsg('ReleaseNotes')"
           class="link-body-emphasis text-decoration-none small ms-1"
-          :href="`${manifest.homepage_url}/releases/tag/${manifest.version}`"
+          :href="`${config.github_url}/releases/tag/${manifest.version}`"
           target="_blank"
           @click.prevent="clickOpen($event, closeWindow)"
         >

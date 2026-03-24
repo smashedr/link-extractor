@@ -16,6 +16,9 @@ import CopySupport from '@/components/CopySupport.vue'
 console.debug('%cLOADED options/App.vue', 'color: Orange')
 
 const manifest = chrome.runtime.getManifest()
+console.log('manifest:', manifest)
+const config = useAppConfig()
+console.log('config:', config)
 
 useTitle('Options')
 </script>
@@ -47,7 +50,7 @@ useTitle('Options')
             <a
               class="link-body-emphasis text-decoration-none small"
               :title="getMsg('ReleaseNotes')"
-              :href="`${manifest.homepage_url}/releases/tag/${manifest.version}`"
+              :href="`${config.github_url}/releases/tag/${manifest.version}`"
               target="_blank"
               rel="nofollow"
               @click.prevent="clickOpen"
@@ -68,7 +71,7 @@ useTitle('Options')
         <HorizontalRule>{{ getMsg('extensionOptions') }}</HorizontalRule>
         <OptionsForm />
 
-        <PermsCheck :close-window="true" :show-info="true" :show-remove="isFirefox" class="my-3" />
+        <PermsCheck :show-info="true" :show-remove="isFirefox" class="my-3" />
 
         <CopySupport :tip="getMsg('CopySupportInformationTip')" class="fst-italic small">{{
           getMsg('CopySupportInformation')

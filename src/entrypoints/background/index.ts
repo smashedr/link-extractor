@@ -19,6 +19,15 @@ export default defineBackground(() => {
   chrome.contextMenus?.onClicked.addListener(onClicked)
 })
 
+async function setUninstallURL() {
+  const manifest = chrome.runtime.getManifest()
+  const url = new URL(`${manifest.homepage_url}`)
+  url.pathname = '/uninstall/'
+  url.searchParams.append('version', manifest.version)
+  await chrome.runtime.setUninstallURL(url.href)
+  console.debug(`setUninstallURL: ${url.href}`)
+}
+
 async function onInstalled(details: chrome.runtime.InstalledDetails) {
   console.log('onInstalled:', details)
 
@@ -30,7 +39,8 @@ async function onInstalled(details: chrome.runtime.InstalledDetails) {
   const manifest = chrome.runtime.getManifest()
   console.debug('manifest:', manifest)
 
-  await chrome.runtime.setUninstallURL(`${manifest.homepage_url}/issues`)
+  // await chrome.runtime.setUninstallURL(`${manifest.homepage_url}/issues`)
+  await setUninstallURL()
 
   if (details.reason === chrome.runtime.OnInstalledReason.INSTALL) {
     // await chrome.runtime.openOptionsPage()
@@ -64,9 +74,10 @@ async function onStartup() {
     console.debug('options:', options)
     createContextMenus(options)
 
-    const manifest = chrome.runtime.getManifest()
-    console.debug('manifest:', manifest)
-    await chrome.runtime.setUninstallURL(`${manifest.homepage_url}/issues`)
+    // const manifest = chrome.runtime.getManifest()
+    // console.debug('manifest:', manifest)
+    // await chrome.runtime.setUninstallURL(`${manifest.homepage_url}/issues`)
+    await setUninstallURL()
   }
 }
 

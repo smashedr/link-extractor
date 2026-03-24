@@ -7,8 +7,8 @@ import BackToTop from '@/components/BackToTop.vue'
 import PanelHeader from '@/components/PanelHeader.vue'
 import PanelFooter from '@/components/PanelFooter.vue'
 import PermsCheck from '@/components/PermsCheck.vue'
-import OptionsForm from '@/components/OptionsForm.vue'
 import ExtractPanel from '@/components/ExtractPanel.vue'
+import LinksTable from '@/components/LinksTable.vue'
 
 async function windowResize() {
   const size = { panelWidth: window.outerWidth, panelHeight: window.outerHeight }
@@ -32,17 +32,18 @@ useTitle('Panel')
 <template>
   <header class="flex-shrink-0">
     <PanelHeader :panel-button="false" :side-button="false" :popup-button="false" />
+    <ExtractPanel class="p-1" />
   </header>
 
   <main class="flex-grow-1 overflow-auto p-1">
     <div class="d-grid gap-2">
       <PermsCheck />
-      <ExtractPanel />
+      <LinksTable />
     </div>
   </main>
 
   <footer class="flex-shrink-0">
-    <OptionsForm :show="['inputs']" :compact="true" class="p-2" />
+    <!--<OptionsForm :show="['inputs']" :compact="true" class="p-2" />-->
     <PanelFooter />
   </footer>
 

@@ -1,6 +1,6 @@
 {
   "extName": { "message": "Link Extractor" },
-  "extShortName": { "message": "LE" },
+  "extShortName": { "message": "LinkEx" },
   "extDescription": {
     "message": "Easily extract all links/domains from tabs/text with optional filters. Allows opening, copying, sorting, downloading, and more..."
   },

@@ -1,5 +1,5 @@
 import { openPage, openSidePanel } from '@/utils/extension.ts'
-import { Options } from '@/utils/options.ts'
+import { getOptions, Options } from '@/utils/options.ts'
 
 export interface LinkData {
   href: string
@@ -106,4 +106,123 @@ export async function extractAndOpen(options: Options) {
   }
   const results = await extractTabs()
   await chrome.storage.local.set({ results })
+}
+
+/**
+ * VanillaJS Process Links
+ * TODO: Rewrite and split up this function...
+ */
+export async function processLinks(links: LinkData[]) {
+  console.debug('processLinks:', links)
+  // const urlFilter = urlParams.get('filter')
+  // const onlyDomains = urlParams.has('domains')
+  const options = await getOptions()
+  console.debug('options:', options)
+
+  // Set Table Options
+  if (options.linksTruncate) {
+    console.debug('%c linksTruncate', 'color: Red')
+    // dtOptions.columnDefs[0].className += ' truncate'
+    // window.addEventListener('resize', windowResize)
+    // document.querySelectorAll('table').forEach((table) => {
+    //   table.style.tableLayout = 'fixed'
+    // })
+  }
+  if (options.linksNoWrap) {
+    console.debug('%c linksNoWrap', 'color: Red')
+    // dtOptions.columnDefs[0].className += ' text-nowrap'
+  }
+  // console.debug('table-responsive')
+  // document.querySelectorAll('.table-wrapper').forEach((el) => {
+  //     el.classList.add('table-responsive')
+  // })
+
+  // Filter links by ://
+  if (options.defaultFilter) {
+    console.debug('%c defaultFilter', 'color: Lime')
+    links = links.filter((link) => link.href.lastIndexOf('://', 10) > 0)
+  }
+  console.debug('links.length:', links.length)
+
+  // Remove duplicate and sort links
+  if (options.removeDuplicates) {
+    console.debug('%c removeDuplicates', 'color: Lime')
+    const hrefs: string[] = []
+    links = links.filter((value) => {
+      if (hrefs.includes(value.href)) {
+        return false
+      } else {
+        hrefs.push(value.href)
+        return true
+      }
+    })
+  }
+  console.debug('links.length:', links.length)
+
+  // // Enable stateSave in datatables
+  // if (options.saveState) {
+  //   dtOptions.stateSave = true
+  // }
+
+  // // Filter links based on pattern
+  // if (urlFilter) {
+  //   const re = new RegExp(urlFilter, options.flags)
+  //   console.debug(`Filtering with regex: ${re} / ${options.flags}`)
+  //   links = links.filter((item) => item.href.match(re))
+  // }
+
+  // If no items, alert and return
+  if (!links.length) {
+    alert('No Results')
+    // return window.close()
+  }
+
+  // // Update links if onlyDomains is not set
+  // if (!onlyDomains) {
+  //   document.getElementById('links-total').textContent = links.length.toString()
+  //   const linksElements = document.querySelectorAll('.links')
+  //   linksElements.forEach((el) => el.classList.remove('d-none'))
+  //
+  //   let opts = { ...dtOptions, ...linksOptions }
+  //   linksTable = new DataTable('#links-table', opts)
+  //   console.debug('links:', links)
+  //   linksTable.on('draw.dt', debounce(dtDraw, 150))
+  //   linksTable.on('column-visibility.dt', dtVisibility)
+  //   linksTable.rows.add(links).draw()
+  // }
+
+  // Extract domains from items, sort, and remove null
+  let domains = [...new Set(links.map((link) => link.origin))]
+  domains = domains.filter(function (el) {
+    return el != null
+  })
+  console.debug('domains:', domains)
+  const mappedDomains = domains.map((domain) => [domain])
+  console.debug('mappedDomains:', mappedDomains)
+  // document.getElementById('domains-total').textContent = domains.length.toString()
+  // if (domains.length) {
+  //   const domainsElements = document.querySelectorAll('.domains')
+  //   domainsElements.forEach((el) => el.classList.remove('d-none'))
+  //   domainsTable = new DataTable('#domains-table', dtOptions)
+  //   console.debug('domains:', domains)
+  //   domainsTable.on('draw.dt', debounce(dtDraw, 150))
+  //   domainsTable.rows.add(domains).draw()
+  // }
+
+  // // Hide Loading message
+  // document.getElementById('loading-message').classList.add('d-none')
+
+  // // Modifications for Android
+  // const platform = await chrome.runtime.getPlatformInfo()
+  // if (platform.os === 'android') {
+  //   // Consider always applying table-responsive to table-wrapper
+  //   document.querySelectorAll('.table-wrapper').forEach((el) => {
+  //     el.classList.add('table-responsive')
+  //   })
+  //   document.querySelectorAll('.keyboard').forEach((el) => {
+  //     el.classList.add('d-none')
+  //   })
+  // }
+
+  return links
 }

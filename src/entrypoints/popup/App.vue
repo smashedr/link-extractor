@@ -45,15 +45,15 @@ onMounted(async () => {
   <div id="popupContainer">
     <PanelHeader :close-window="true" :popup-button="false" />
 
-    <div class="d-grid gap-2 p-1">
-      <PermsCheck />
+    <!--<div class="d-grid gap-2 p-1">-->
+    <PermsCheck :close-window="true" />
 
-      <!--Note: Consider moving tabAccess to ExtractPanel-->
-      <ExtractPanel v-if="tabAccess" :close-window="true" />
-      <div v-else class="text-center text-ellipsis border border-danger border-2 rounded p-1 mb-2">
-        {{ getMsg('NoTabAccess') }}.
-      </div>
+    <!--Note: Consider moving tabAccess to ExtractPanel-->
+    <ExtractPanel v-if="tabAccess" :close-window="true" class="p-1" />
+    <div v-else class="text-center text-ellipsis border border-danger border-2 rounded p-1 mb-2">
+      {{ getMsg('NoTabAccess') }}.
     </div>
+    <!--</div>-->
 
     <OptionsForm :show="['switches']" :compact="true" class="p-2" />
 

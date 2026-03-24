@@ -16,11 +16,10 @@ withDefaults(
   },
 )
 
-// const manifest = chrome.runtime.getManifest()
-// console.debug('manifest:', manifest)
-
+const manifest = chrome.runtime.getManifest()
+console.debug('manifest:', manifest)
 const config = useAppConfig()
-console.log('name:', config.name)
+console.log('config:', config)
 </script>
 
 <template>
@@ -29,7 +28,7 @@ console.log('name:', config.name)
       v-if="homePage"
       class="link-body-emphasis text-decoration-none d-inline-block"
       rel="noopener"
-      :href="config.homepage"
+      :href="manifest.homepage_url"
       target="_blank"
       @click.prevent="clickOpen"
       >{{ getMsg('HomePage') }}</a
@@ -39,7 +38,7 @@ console.log('name:', config.name)
       v-if="requestFeature"
       class="link-body-emphasis text-decoration-none d-inline-block"
       rel="noopener"
-      :href="`${config.github}/issues/new?template=1-feature.yaml`"
+      :href="`${config.github_url}/issues/new?template=1-feature.yaml`"
       target="_blank"
       @click.prevent="clickOpen"
       >{{ getMsg('RequestFeature') }}</a
@@ -49,7 +48,7 @@ console.log('name:', config.name)
       v-if="openIssue"
       class="link-body-emphasis text-decoration-none d-inline-block"
       rel="noopener"
-      :href="`${config.github}/issues`"
+      :href="`${config.github_url}/issues`"
       target="_blank"
       @click.prevent="clickOpen"
       >{{ getMsg('OpenIssue') }}</a

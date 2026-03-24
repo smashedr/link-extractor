@@ -24,11 +24,12 @@ const props = withDefaults(
 const hasPerms = ref(true)
 
 const manifest = chrome.runtime.getManifest()
-console.debug('host_permissions:', manifest.host_permissions)
+// TODO: Make this a const variable...
+console.debug('optional_host_permissions:', manifest.optional_host_permissions)
 
 async function updatePerms() {
   hasPerms.value = await chrome.permissions.contains({
-    origins: manifest.host_permissions,
+    origins: manifest.optional_host_permissions,
   })
   console.debug('updatePerms:', hasPerms.value)
 }
@@ -59,7 +60,7 @@ async function revokePerms(event: Event) {
 
 async function requestPerms() {
   return await chrome.permissions.request({
-    origins: manifest.host_permissions,
+    origins: manifest.optional_host_permissions,
   })
 }
 

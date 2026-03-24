@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { getMsg } from '@/utils/index.ts'
 import { clickOpen } from '@/utils/extension.ts'
+import { useAppConfig } from '#imports'
 
 withDefaults(
   defineProps<{
@@ -15,8 +16,11 @@ withDefaults(
   },
 )
 
-const manifest = chrome.runtime.getManifest()
-console.debug('manifest:', manifest)
+// const manifest = chrome.runtime.getManifest()
+// console.debug('manifest:', manifest)
+
+const config = useAppConfig()
+console.log('name:', config.name)
 </script>
 
 <template>
@@ -25,27 +29,27 @@ console.debug('manifest:', manifest)
       v-if="homePage"
       class="link-body-emphasis text-decoration-none d-inline-block"
       rel="noopener"
-      :href="manifest.homepage_url"
+      :href="config.homepage"
       target="_blank"
       @click.prevent="clickOpen"
       >{{ getMsg('HomePage') }}</a
     >
-    <span class="mx-1">&bull;</span>
+    <span class="mx-2">&bull;</span>
     <a
       v-if="requestFeature"
       class="link-body-emphasis text-decoration-none d-inline-block"
       rel="noopener"
-      :href="`${manifest.homepage_url}/issues/new?template=1-feature.yaml`"
+      :href="`${config.github}/issues/new?template=1-feature.yaml`"
       target="_blank"
       @click.prevent="clickOpen"
       >{{ getMsg('RequestFeature') }}</a
     >
-    <span class="mx-1">&bull;</span>
+    <span class="mx-2">&bull;</span>
     <a
       v-if="openIssue"
       class="link-body-emphasis text-decoration-none d-inline-block"
       rel="noopener"
-      :href="`${manifest.homepage_url}/issues`"
+      :href="`${config.github}/issues`"
       target="_blank"
       @click.prevent="clickOpen"
       >{{ getMsg('OpenIssue') }}</a

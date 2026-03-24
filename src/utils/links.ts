@@ -1,3 +1,6 @@
+import { openPage, openSidePanel } from '@/utils/extension.ts'
+import { Options } from '@/utils/options.ts'
+
 export interface LinkData {
   href: string
   text: string
@@ -67,12 +70,13 @@ export function extractSelectionLinks(): LinkData[] {
   return links
 }
 
+// NOTE: Allow passing queryInfo options...
 export async function extractTabs(): Promise<LinkData[]> {
   const tabs = await chrome.tabs.query({
     currentWindow: true,
     highlighted: true,
   })
-  console.log(`extractTabs:`, tabs)
+  console.log(`extractTabs: ${tabs.length}`, tabs)
 
   const results: LinkData[] = []
   for (const tab of tabs) {
@@ -87,6 +91,19 @@ export async function extractTabs(): Promise<LinkData[]> {
     // console.log('injectionResults:', injectionResults)
     results.push(...injectionResults.flatMap(({ result }) => result ?? []))
   }
-  console.log('results:', results)
+  console.log(`results ${results.length}`, results)
   return results
+}
+
+// NOTE: Consider accepting extractTabs queryInfo options once implemented...
+export async function extractAndOpen(options: Options) {
+  console.log('extractAndOpen:', options)
+  // NOTE: Consider moving this logic to a function...
+  if (options.extractSide) {
+    openSidePanel()
+  } else {
+    openPage().catch(console.warn)
+  }
+  const results = await extractTabs()
+  await chrome.storage.local.set({ results })
 }

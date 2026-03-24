@@ -18,6 +18,10 @@ export default defineConfig({
   srcDir: 'src',
   modules: ['@wxt-dev/module-vue'],
 
+  // https://wxt.dev/guide/essentials/config/auto-imports.html#disabling-auto-imports
+  // imports: false,
+
+  // https://wxt.dev/guide/essentials/config/manifest.html
   manifest: ({ browser, mode }) => {
     const isFirefox = browser === 'firefox'
     const isDev = mode === 'development'
@@ -27,6 +31,7 @@ export default defineConfig({
       icons,
       default_locale: 'en',
       name: '__MSG_extName__',
+      // short_name: '__MSG_extShortName__',
       description: '__MSG_extDescription__',
       homepage_url: 'https://link-extractor.cssnr.com/',
 
@@ -75,11 +80,13 @@ export default defineConfig({
     }
   },
 
-  // NOTE: Override with web-ext.config.ts
+  // https://wxt.dev/guide/essentials/config/browser-startup.html
+  // Override with: web-ext.config.ts
   webExt: {
     disabled: true,
   },
 
+  // https://wxt.dev/guide/essentials/config/vite.html
   vite: () => ({
     // NOTE: This silences bootstrap deprecation warnings
     css: {

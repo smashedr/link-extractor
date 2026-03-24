@@ -2,34 +2,36 @@
 import { getMsg } from '@/utils/index.ts'
 import { addFilter, deleteFilter, Filter } from '@/utils/filters.ts'
 import { useFilters } from '@/composables/useFilters.ts'
+import { showToast } from '@/composables/useToast.ts'
 import DeleteModal from '@/components/DeleteModal.vue'
 
 console.debug('%cLOADED: components/FiltersTable.vue', 'color: Orange')
 
-const deleteModal = ref<InstanceType<typeof DeleteModal> | null>(null)
-
 const filters = useFilters()
 
-const regex = ref('')
-const name = ref('')
+const deleteModal = ref<InstanceType<typeof DeleteModal> | null>(null)
+
+const regexRef = ref()
+const nameRef = ref()
 
 function onSubmit(e: SubmitEvent) {
   console.log('onSubmit:', e)
-  // const target = e.target as HTMLFormElement
-  // console.log('target:', target)
-  // const regexInput = target.elements[0] as HTMLInputElement
-  // const nameInput = target.elements[1] as HTMLInputElement
-  // const regex = regexInput.value.trim()
-  // const name = nameInput.value.trim()
-  console.log('regex:', regex.value.trim())
-  console.log('name:', name.value.trim())
+  const regex = regexRef.value.value.trim()
+  const name = nameRef.value.value.trim()
+  console.log('regex:', regex)
+  console.log('name:', name)
 
-  if (!regex.value.trim()) return
-  const filter = { regex: regex.value.trim(), name: name.value.trim() }
-  addFilter(filter)
+  if (!regex) {
+    showToast('No Filter Value', 'warning')
+    regexRef.value.value = regex
+    return regexRef.value.focus()
+  }
+
+  addFilter({ regex, name })
 
   const target = e.target as HTMLFormElement
   target.reset()
+  regexRef.value.focus()
 }
 
 function openDeleteModal(filter: Filter) {
@@ -50,24 +52,24 @@ async function confirmDelete(filter: Filter) {
       <label class="form-label" for="regex"><i class="fa-solid fa-filter me-2"></i> {{ getMsg('SavedFilters') }}</label>
       <div class="input-group">
         <input
-          v-model="regex"
+          ref="regexRef"
+          id="regex"
           type="text"
           class="form-control"
           aria-describedby="add-filter-btn"
           placeholder="Filter/Regex"
           aria-label="Filter/Regex"
-          id="regex"
-          name="regex"
+          autocomplete="off"
           required
         />
         <input
-          v-model="name"
+          ref="nameRef"
           type="text"
           class="form-control"
           aria-describedby="add-filter-btn"
-          placeholder="Optional: Name"
-          aria-label="Optional: Name"
-          name="name"
+          placeholder="Optional Name"
+          aria-label="Optional Name"
+          autocomplete="off"
         />
         <button class="btn btn-success" type="submit" id="add-filter-btn">
           Add <i class="fa-solid fa-circle-plus ms-1"></i>
@@ -76,7 +78,7 @@ async function confirmDelete(filter: Filter) {
     </form>
 
     <div class="table-wrapper">
-      <table id="filters-table" class="table table-sm table-hover small w-100">
+      <table id="filters-table" class="table table-sm table-hover small w-100" style="table-layout: fixed">
         <thead class="">
           <tr>
             <th class="bg-transparent">Filters - {{ filters.length }}</th>
@@ -85,14 +87,19 @@ async function confirmDelete(filter: Filter) {
           </tr>
         </thead>
         <tbody id="links-body">
-          <tr v-if="filters" v-for="filter of filters">
-            <td class="bg-transparent">{{ filter.regex }}</td>
-            <td class="bg-transparent">{{ filter.name }}</td>
+          <tr v-if="filters?.length" v-for="filter of filters">
+            <td class="bg-transparent text-truncate">{{ filter.regex }}</td>
+            <td class="bg-transparent text-truncate" :class="{ 'text-muted': !filter.name }">
+              {{ filter.name || 'not set' }}
+            </td>
             <td class="bg-transparent">
               <a @click.prevent="openDeleteModal(filter)" title="Delete" class="link-danger" role="button" href="#"
                 ><i class="fa-regular fa-trash-can"></i
               ></a>
             </td>
+          </tr>
+          <tr v-else>
+            <td class="bg-transparent text-center text-muted fw-bold" colspan="3">{{ getMsg('NoSavedFilters') }}</td>
           </tr>
         </tbody>
       </table>

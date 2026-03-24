@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { getMsg } from '@/utils/index.ts'
-import { extractTabs } from '@/utils/links.ts'
-import { openPage, openSidePanel } from '@/utils/extension.ts'
+import { extractAndOpen } from '@/utils/links.ts'
 import { useOptions } from '@/composables/useOptions.ts'
 import { useFilters } from '@/composables/useFilters.ts'
+import { openOptions } from '@/utils/extension.ts'
+import { Filter } from '@/utils/filters.ts'
 
 const props = withDefaults(
   defineProps<{
@@ -17,6 +18,14 @@ const props = withDefaults(
 const options = useOptions()
 const filters = useFilters()
 
+function fmtName(filter: Filter) {
+  if (filter.name) {
+    return `${filter.name} - ${filter.regex}`
+  } else {
+    return filter.regex
+  }
+}
+
 function onSubmit(e: SubmitEvent) {
   console.log('onSubmit:', e)
   const target = e.target as HTMLFormElement
@@ -27,25 +36,15 @@ function onSubmit(e: SubmitEvent) {
   console.log('value:', value)
 }
 
-// NOTE: Make into a reusable function
-async function processExtract() {
-  // NOTE: Consider moving this logic to a function...
-  if (options.value.extractSide) {
-    openSidePanel()
-  } else {
-    openPage().catch(console.warn)
-  }
-
-  // extractTabs().then((results) => chrome.storage.local.set({ results }))
-  const results = await extractTabs()
-  await chrome.storage.local.set({ results })
+async function extractLinks() {
+  await extractAndOpen(options.value)
   if (props.closeWindow) window.close()
 }
 </script>
 
 <template>
   <div class="btn-group btn-group-sm" role="group" aria-label="Button group with nested dropdown">
-    <button @click.prevent="processExtract" type="button" class="btn btn-success">
+    <button @click.prevent="extractLinks" type="button" class="btn btn-success">
       <i class="fa-solid fa-link me-1"></i> {{ getMsg('AllLinks') }}
     </button>
     <button type="button" class="btn btn-primary">
@@ -60,9 +59,14 @@ async function processExtract() {
       >
         {{ getMsg('Filters') }}
       </button>
-      <ul class="dropdown-menu">
-        <li v-if="filters" v-for="filter of filters">
-          <a class="dropdown-item" href="#">{{ filter.name }} - {{ filter.regex }}</a>
+      <ul class="dropdown-menu overflow-y-auto overflow-x-hidden">
+        <li v-if="filters?.length" v-for="filter of filters">
+          <a class="dropdown-item text-truncate" href="#">{{ fmtName(filter) }}</a>
+        </li>
+        <li v-else>
+          <a class="dropdown-item" href="/options.html" @click.prevent="openOptions(true)">{{
+            getMsg('NoSavedFilters')
+          }}</a>
         </li>
       </ul>
     </div>
@@ -78,6 +82,7 @@ async function processExtract() {
         :placeholder="getMsg('QuickFilter')"
         :aria-label="getMsg('QuickFilter')"
         aria-describedby="submit-filter"
+        autocomplete="off"
         autofocus
         required
       />
@@ -86,4 +91,10 @@ async function processExtract() {
   </form>
 </template>
 
-<!--<style scoped></style>-->
+<style scoped>
+.dropdown-menu {
+  max-height: 260px;
+  max-width: 300px;
+  scrollbar-gutter: stable;
+}
+</style>

@@ -1,5 +1,6 @@
 {
   "extName": { "message": "Link Extractor" },
+  "extShortName": { "message": "LE" },
   "extDescription": {
     "message": "Easily extract all links/domains from tabs/text with optional filters. Allows opening, copying, sorting, downloading, and more..."
   },
@@ -58,6 +59,7 @@
   "AllLinks": { "message": "All Links" },
   "QuickFilter": { "message": "Quick Filter" },
   "SavedFilters": { "message": "Saved Filters" },
+  "NoSavedFilters": { "message": "No Saved Filters" },
 
   "HomePage": { "message": "Home Page" },
   "ReleaseNotes": { "message": "Release Notes" },

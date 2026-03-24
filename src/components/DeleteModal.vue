@@ -35,15 +35,14 @@ defineExpose({ show })
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
-            <h1 class="modal-title fs-5" id="delete-modal-label">
-              Delete <span class="text-warning">{{ item?.name || 'Filter' }}</span>
+            <h1 class="modal-title fs-5 text-truncate" id="delete-modal-label">
+              Delete <span :class="{ 'text-warning': item?.name }">{{ item?.name || 'Filter' }}</span>
             </h1>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" tabindex="-1"></button>
           </div>
-          <div class="modal-body text-center p-2">
-            <p class="mb-1">
-              Filter: <kbd>{{ item?.regex }}</kbd>
-            </p>
+          <div class="modal-body p-2 d-flex justify-content-center align-items-baseline gap-1">
+            <span class="flex-shrink-0">Filter:</span>
+            <kbd class="text-truncate" style="min-width: 0">{{ item?.regex }}</kbd>
           </div>
           <div class="modal-footer p-2">
             <button type="button" class="btn btn-danger me-auto" @click="handleConfirm">
@@ -56,3 +55,5 @@ defineExpose({ show })
     </div>
   </Teleport>
 </template>
+
+<!--<style scoped></style>-->

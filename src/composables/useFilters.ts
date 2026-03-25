@@ -4,11 +4,19 @@ import { STORE_KEY, Filter, getFilters } from '@/utils/filters.ts'
 
 console.debug('%cLOADED: composables/useFilters.ts', 'color: Orange')
 
+export function fmtFilterName(filter: Filter) {
+  if (filter.name) {
+    return `${filter.name} - ${filter.regex}`
+  } else {
+    return filter.regex
+  }
+}
+
 export function useFilters(): Ref<Filter[]> {
   const items = ref<Filter[]>([] as Filter[])
 
   function onChanged(changes: object) {
-    console.debug('composables/useFilters.ts: onChanged:', changes)
+    console.debug('composables/useFilters.ts - onChanged:', changes)
     for (const [key, { newValue }] of Object.entries(changes)) {
       if (key === STORE_KEY) {
         console.debug('%c newValue:', 'color: SpringGreen', newValue)

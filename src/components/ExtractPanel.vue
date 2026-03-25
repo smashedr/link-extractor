@@ -2,9 +2,8 @@
 import { getMsg } from '@/utils/index.ts'
 import { extractAndOpen } from '@/utils/links.ts'
 import { useOptions } from '@/composables/useOptions.ts'
-import { useFilters } from '@/composables/useFilters.ts'
+import { fmtFilterName, useFilters } from '@/composables/useFilters.ts'
 import { openOptions } from '@/utils/extension.ts'
-import { Filter } from '@/utils/filters.ts'
 
 const props = withDefaults(
   defineProps<{
@@ -17,14 +16,6 @@ const props = withDefaults(
 
 const options = useOptions()
 const filters = useFilters()
-
-function fmtName(filter: Filter) {
-  if (filter.name) {
-    return `${filter.name} - ${filter.regex}`
-  } else {
-    return filter.regex
-  }
-}
 
 function onSubmit(e: SubmitEvent) {
   console.log('onSubmit:', e)
@@ -62,7 +53,7 @@ async function extractLinks() {
         </button>
         <ul class="dropdown-menu overflow-y-auto overflow-x-hidden">
           <li v-if="filters?.length" v-for="filter of filters">
-            <a class="dropdown-item text-truncate" href="#">{{ fmtName(filter) }}</a>
+            <a class="dropdown-item text-truncate" href="#">{{ fmtFilterName(filter) }}</a>
           </li>
           <li v-else>
             <a class="dropdown-item" href="/options.html" @click.prevent="openOptions(props.closeWindow)">{{

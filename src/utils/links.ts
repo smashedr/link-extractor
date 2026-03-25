@@ -1,5 +1,6 @@
 import { openPage, openSidePanel } from '@/utils/extension.ts'
 import { getOptions, Options } from '@/utils/options.ts'
+import { setResults } from '@/composables/useResults.ts'
 
 export interface LinkData {
   href: string
@@ -105,7 +106,7 @@ export async function extractAndOpen(options: Options) {
     openPage().catch(console.warn)
   }
   const results = await extractTabs()
-  await chrome.storage.local.set({ results })
+  await setResults(results)
 }
 
 /**
@@ -116,6 +117,8 @@ export async function processLinks(links: LinkData[]) {
   console.debug('processLinks:', links)
   // const urlFilter = urlParams.get('filter')
   // const onlyDomains = urlParams.has('domains')
+
+  // TODO: Determine if options should be passed or gotten
   const options = await getOptions()
   console.debug('options:', options)
 
@@ -224,5 +227,23 @@ export async function processLinks(links: LinkData[]) {
   //   })
   // }
 
+  return links
+}
+
+export async function filterLinks(
+  filter: Filter,
+  links: LinkData[],
+): Promise<LinkData[]> {
+  // console.log('filterLinks - filter:', filter)
+  // console.log('filterLinks - links:', links)
+
+  // TODO: Determine if options should be passed or gotten
+  const options = await getOptions()
+  console.debug('options:', options)
+
+  const re = new RegExp(filter.regex, options.flags)
+  console.debug(`Filtering with regex: ${re} / ${options.flags}`)
+  // TODO: WIP: This is not yet finished and just copied...
+  links = links.filter((item) => re.exec(item.href) !== null)
   return links
 }

@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
-import { getMsg } from '@/utils/index.ts'
 import { clickOpen } from '@/utils/extension.ts'
 import { isFirefox } from '@/utils/system.ts'
 
@@ -31,10 +30,10 @@ async function setShortcuts(selector = '#keyboard-shortcuts') {
     let description = command.description
     // Note: Chrome does not parse the description for _execute_action in manifest.json
     if (!description && command.name === '_execute_action') {
-      description = getMsg('cmdExecuteAction') // NOTE: Also defined in: manifest.json
+      description = i18n.t('cmd.executeAction') // NOTE: Also defined in: manifest.json
     }
     row.querySelector('.description')!.textContent = description ?? null
-    row.querySelector('kbd')!.textContent = command.shortcut || 'Not Set'
+    row.querySelector('kbd')!.textContent = command.shortcut || i18n.t('ui.keyboard.notSet')
     tbody.appendChild(row)
   }
 }
@@ -49,13 +48,13 @@ onMounted(() => {
     <table id="keyboard-shortcuts" class="table table-sm rounded table-borderless table-hover d-none">
       <caption class="visually-hidden">
         {{
-          getMsg('KeyboardShortcuts')
+          i18n.t('ui.keyboard.shortcuts')
         }}
       </caption>
       <thead class="visually-hidden">
         <tr>
-          <th>{{ getMsg('Description') }}</th>
-          <th>{{ getMsg('Shortcut') }}</th>
+          <th>{{ i18n.t('ui.keyboard.description') }}</th>
+          <th>{{ i18n.t('ui.keyboard.shortcut') }}</th>
         </tr>
       </thead>
       <tbody></tbody>
@@ -65,8 +64,8 @@ onMounted(() => {
             <i class="fa-regular fa-keyboard me-1"></i>
             <span class="description"></span>
           </td>
-          <td class="bg-transparent text-end" :title="getMsg('KeyboardShortcuts')">
-            <kbd>{{ getMsg('Unknown') }}</kbd>
+          <td class="bg-transparent text-end" :title="i18n.t('ui.keyboard.shortcuts')">
+            <kbd>{{ i18n.t('ui.keyboard.unknown') }}</kbd>
           </td>
         </tr>
       </tfoot>
@@ -74,7 +73,7 @@ onMounted(() => {
     <!-- keyboard-shortcuts -->
 
     <div class="mb-2">
-      {{ getMsg('ManageKeyboardShortcuts') }}:
+      {{ i18n.t('ui.keyboard.manage') }}:
       <a
         v-if="isFirefox"
         class="text-decoration-none d-inline-block firefox"

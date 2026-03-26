@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { i18n } from '#imports'
 import { ref, onMounted, onUnmounted } from 'vue'
 import { useToast } from '@/composables/useToast.ts'
 import { clickOpen } from '@/utils/extension.ts'
@@ -85,15 +86,15 @@ onUnmounted(() => {
         data-bs-toggle="tooltip"
         data-bs-placement="top"
         data-bs-trigger="hover"
-        data-bs-title="This Extension Requires Host Permissions to Function."
+        :data-bs-title="i18n.t('ui.perms.grant.tip')"
         @click="grantPerms"
       >
-        <i class="fa-solid fa-check-double me-1"></i> Grant Host Permissions
+        <i class="fa-solid fa-check-double me-1"></i> {{ i18n.t('ui.perms.grant.text') }}
       </button>
       <p v-if="showInfo" class="text-center mb-0">
-        <a href="/permissions.html" target="_blank" @click.prevent="clickOpen($event, closeWindow)"
-          >More Information on Permissions</a
-        >
+        <a href="/permissions.html" target="_blank" @click.prevent="clickOpen($event, closeWindow)">{{
+          i18n.t('ui.perms.info')
+        }}</a>
       </p>
     </div>
 
@@ -106,10 +107,10 @@ onUnmounted(() => {
         data-bs-toggle="tooltip"
         data-bs-placement="top"
         data-bs-trigger="hover"
-        data-bs-title="Google Chrome does not allow removing required permissions via this method."
+        :data-bs-title="i18n.t('ui.perms.remove.tip')"
         @click="revokePerms"
       >
-        Remove Host Permissions
+        {{ i18n.t('ui.perms.remove.text') }}
       </button>
     </div>
   </div>

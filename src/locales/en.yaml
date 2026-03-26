@@ -1,0 +1,103 @@
+name: Link Extractor
+shortName: LinkEx
+description: Easily extract all links/domains from tabs/text with optional filters. Allows opening, copying, sorting, downloading, and more...
+
+ui:
+  options: Options
+  homePage: Home Page
+  releaseNotes: Release Notes
+  requestFeature: Request Feature
+  openIssue: Open Issue
+  noTabAccess: No Access to the Current Tab.
+
+  theme:
+    dark: Dark
+    light: Light
+    auto: Auto
+
+  action:
+    cancel: Cancel
+    close: Close
+    go: Go
+    openPopup: Open Popup
+    sidePanel: Side Panel
+    extensionPanel: Extension Panel
+    extensionPage: Extension Page
+
+  links:
+    all: All Links
+    domains: Domains
+
+  filters:
+    filters: Filters
+    noSaved: No Saved Filters
+    quick: Quick Filter
+    saved: Saved Filters
+
+  keyboard:
+    description: Description
+    manage: Manage Keyboard Shortcuts
+    notSet: Not Set
+    shortcut: Shortcut
+    shortcuts: Keyboard Shortcuts
+    unknown: Unknown
+
+  perms:
+    grant:
+      text: Grant Host Permissions
+      tip: This Extension Requires Host Permissions to Function
+    remove:
+      text: Remove Host Permissions
+      tip: You will no longer be able to analyze new images
+    info: More Information on Permissions
+
+options:
+  # options/App.vue
+  title: Options
+  extension: Extension Options
+  copySupport: Copy Support Information
+  copySupportTip: For issue reporting.
+  copySupportMsg: Support Information Copied.
+  homePage: Home Page
+  savedFilters: Release Notes
+  releaseNotes: Release Notes
+
+ctx:
+  # background/menus.ts
+  copyText: Copy Link Text to Clipboard
+  copyLinks: Copy All Links to Clipboard
+  copySelection: Copy Selected Links to Clipboard
+  extSelection: Extract Links from Selection
+  extLinks: Extract All Links
+  extFilter: Extract with Filter
+  extDomains: Extract Domains Only
+  openOptions: Open Options
+
+cmd:
+  # wxt.config.ts
+  executeAction: Open Popup
+  extractAll: Extract Links from Tab(s)
+  extractSelection: Extract Links from Selected Text
+  copyAll: Copy Links from Tab(s)
+  copySelection: Copy Links from Selected Text
+
+option:
+  toggle:
+    removeDuplicates: Remove Duplicates
+    removeDuplicatesTip: Removes duplicate entries from the list.
+    defaultFilter: Default Filter
+    defaultFilterTip: Apply the default filter on load.
+    saveState: Save State
+    saveStateTip: Persist state between sessions.
+    linksTruncate: Truncate Links
+    linksTruncateTip: Truncate long link text.
+    linksNoWrap: No Wrap Links
+    linksNoWrapTip: Prevent links from wrapping.
+    activateLinks: Activate Links
+    activateLinksTip: Make links clickable.
+    extractSide: Extract to Side Panel
+    extractSideTip: Extract Links to the Side Panel.
+    contextMenu: Context Menu
+    contextMenuTip: Show context menu on right click.
+    showUpdate: Show Update
+    showUpdateTip: Show update notifications.

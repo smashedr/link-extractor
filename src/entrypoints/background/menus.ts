@@ -1,23 +1,24 @@
+import { i18n } from '#imports'
 import { Options } from '@/utils/options.ts'
 
 const config: chrome.contextMenus.CreateProperties[] = [
-  { contexts: ['link'], id: 'ctxCopyText' },
-  { contexts: ['all'], id: 'ctxCopyLinks' },
-  { contexts: ['selection'], id: 'ctxCopySelection' },
-  { contexts: ['selection'], id: 'ctxExtSelection' },
+  { contexts: ['link'], id: 'copyText' },
+  { contexts: ['all'], id: 'copyLinks' },
+  { contexts: ['selection'], id: 'copySelection' },
+  { contexts: ['selection'], id: 'extSelection' },
   { contexts: ['all'], id: 'separator' },
-  { contexts: ['all'], id: 'ctxExtLinks' },
-  { contexts: ['all'], id: 'ctxExtFilter' },
-  { contexts: ['all'], id: 'ctxExtDomains' },
+  { contexts: ['all'], id: 'extLinks' },
+  { contexts: ['all'], id: 'extFilter' },
+  { contexts: ['all'], id: 'extDomains' },
   { contexts: ['all'], id: 'separator' },
-  { contexts: ['all'], id: 'ctxOpenOptions' },
+  { contexts: ['all'], id: 'openOptions' },
 ]
 
 const contexts: chrome.contextMenus.CreateProperties[] = config.map((entry) => ({
   ...entry,
   ...(entry.id === 'separator'
     ? { type: 'separator', id: crypto.randomUUID() }
-    : { title: chrome.i18n.getMessage(entry.id!) }),
+    : { title: i18n.t(`ctx.${entry.id}` as any) }),
 }))
 
 // NOTE: Below is ported from VanillaJS

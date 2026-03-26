@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { getMsg } from '@/utils/index.ts'
+import { i18n } from '#imports'
 import { useTitle } from '@/composables/useTitle.ts'
 import { clickOpen } from '@/utils/extension.ts'
 import { isFirefox, isMobile } from '@/utils/system.ts'
@@ -20,7 +20,7 @@ console.log('manifest:', manifest)
 const config = useAppConfig()
 console.log('config:', config)
 
-useTitle('Options')
+useTitle(i18n.t('options.title'))
 </script>
 
 <template>
@@ -39,7 +39,7 @@ useTitle('Options')
           <div>
             <a
               class="link-body-emphasis text-decoration-none fs-1"
-              :title="getMsg('HomePage')"
+              :title="i18n.t('options.homePage')"
               :href="manifest.homepage_url"
               target="_blank"
               rel="nofollow"
@@ -49,7 +49,7 @@ useTitle('Options')
             >
             <a
               class="link-body-emphasis text-decoration-none small"
-              :title="getMsg('ReleaseNotes')"
+              :title="i18n.t('options.releaseNotes')"
               :href="`${config.github_url}/releases/tag/${manifest.version}`"
               target="_blank"
               rel="nofollow"
@@ -61,21 +61,24 @@ useTitle('Options')
         </div>
 
         <template v-if="!isMobile">
-          <HorizontalRule>{{ getMsg('keyboardShortcuts') }}</HorizontalRule>
+          <HorizontalRule>{{ i18n.t('ui.keyboard.shortcuts') }}</HorizontalRule>
           <KeyboardShortcuts />
         </template>
 
-        <HorizontalRule>{{ getMsg('SavedFilters') }}</HorizontalRule>
+        <HorizontalRule>{{ i18n.t('ui.filters.saved') }}</HorizontalRule>
         <FiltersTable />
 
-        <HorizontalRule>{{ getMsg('extensionOptions') }}</HorizontalRule>
+        <HorizontalRule>{{ i18n.t('options.extension') }}</HorizontalRule>
         <OptionsForm />
 
         <PermsCheck :show-info="true" :show-remove="isFirefox" class="my-3" />
 
-        <CopySupport :tip="getMsg('CopySupportInformationTip')" class="fst-italic small">{{
-          getMsg('CopySupportInformation')
-        }}</CopySupport>
+        <CopySupport
+          :message="i18n.t('options.copySupportMsg')"
+          :tip="i18n.t('options.copySupportTip')"
+          class="fst-italic small"
+          >{{ i18n.t('options.copySupport') }}</CopySupport
+        >
 
         <hr class="mt-0" />
         <PageFooter class="mb-2" />

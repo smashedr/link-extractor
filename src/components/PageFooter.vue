@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { getMsg } from '@/utils/index.ts'
+import { i18n, useAppConfig } from '#imports'
 import { clickOpen } from '@/utils/extension.ts'
-import { useAppConfig } from '#imports'
 
 withDefaults(
   defineProps<{
@@ -31,7 +30,7 @@ console.log('config:', config)
       :href="manifest.homepage_url"
       target="_blank"
       @click.prevent="clickOpen"
-      >{{ getMsg('HomePage') }}</a
+      >{{ i18n.t('ui.homePage') }}</a
     >
     <span class="mx-2">&bull;</span>
     <a
@@ -41,7 +40,7 @@ console.log('config:', config)
       :href="`${config.github_url}/issues/new?template=1-feature.yaml`"
       target="_blank"
       @click.prevent="clickOpen"
-      >{{ getMsg('RequestFeature') }}</a
+      >{{ i18n.t('ui.requestFeature') }}</a
     >
     <span class="mx-2">&bull;</span>
     <a
@@ -51,7 +50,7 @@ console.log('config:', config)
       :href="`${config.github_url}/issues`"
       target="_blank"
       @click.prevent="clickOpen"
-      >{{ getMsg('OpenIssue') }}</a
+      >{{ i18n.t('ui.openIssue') }}</a
     >
   </div>
 </template>

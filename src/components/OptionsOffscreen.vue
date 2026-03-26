@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { getMsg } from '@/utils/index.ts'
+import { i18n } from '#imports'
 import OptionsForm from '@/components/OptionsForm.vue'
 import ThemeSwitch from '@/components/ThemeSwitch.vue'
 </script>
@@ -24,8 +24,13 @@ import ThemeSwitch from '@/components/ThemeSwitch.vue'
   >
     <div class="offcanvas-header">
       <ThemeSwitch />
-      <h5 class="offcanvas-title ms-2" id="optionsOffcanvasLabel">{{ getMsg('Options') }}</h5>
-      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" :aria-label="getMsg('Close')"></button>
+      <h5 class="offcanvas-title ms-2" id="optionsOffcanvasLabel">{{ i18n.t('ui.options') }}</h5>
+      <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="offcanvas"
+        :aria-label="i18n.t('ui.action.close')"
+      ></button>
     </div>
     <div class="offcanvas-body p-2">
       <OptionsForm :compact="true" />

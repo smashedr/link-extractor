@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { getMsg } from '@/utils/index.ts'
+import { i18n } from '#imports'
 import { addFilter, deleteFilter, Filter } from '@/utils/filters.ts'
 import { useFilters } from '@/composables/useFilters.ts'
 import { showToast } from '@/composables/useToast.ts'
@@ -49,7 +49,9 @@ async function confirmDelete(filter: Filter) {
 <template>
   <div>
     <form @submit.prevent="onSubmit" id="filters-form" class="mb-1">
-      <label class="form-label" for="regex"><i class="fa-solid fa-filter me-2"></i> {{ getMsg('SavedFilters') }}</label>
+      <label class="form-label" for="regex"
+        ><i class="fa-solid fa-filter me-2"></i> {{ i18n.t('ui.filters.saved') }}</label
+      >
       <div class="input-group">
         <input
           ref="regexRef"
@@ -99,7 +101,9 @@ async function confirmDelete(filter: Filter) {
             </td>
           </tr>
           <tr v-else>
-            <td class="bg-transparent text-center text-muted fw-bold" colspan="3">{{ getMsg('NoSavedFilters') }}</td>
+            <td class="bg-transparent text-center text-muted fw-bold" colspan="3">
+              {{ i18n.t('ui.filters.noSaved') }}
+            </td>
           </tr>
         </tbody>
       </table>

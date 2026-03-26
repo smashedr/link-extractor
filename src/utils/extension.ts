@@ -75,12 +75,18 @@ export async function openExtPanel(close = false) {
 
   try {
     const panel = await chrome.windows.get(lastPanelID)
-    // console.debug('window', window)
+    // console.debug('panel', panel)
+    console.debug('panel?.id', panel?.id)
     if (panel) {
-      console.debug(`%c Window found: ${panel.id}`, 'color: Lime')
-      await chrome.windows.update(lastPanelID, { focused: true })
-      if (close) window.close()
-      return
+      const tabs = await chrome.tabs.query({ active: true, currentWindow: true })
+      // console.debug('tabs:', tabs)
+      console.debug('tabs[0]?.windowId:', tabs[0]?.windowId)
+      if (panel.id != tabs[0]?.windowId) {
+        console.debug('%c Window found:', 'color: SpringGreen', panel.id)
+        await chrome.windows.update(lastPanelID, { focused: true })
+        if (close) window.close()
+        return
+      }
     }
   } catch (e) {
     console.log(e)

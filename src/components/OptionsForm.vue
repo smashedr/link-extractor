@@ -80,29 +80,6 @@ onMounted(() => {
           @save="saveKeyValue"
         />
       </template>
-
-      <!--<div-->
-      <!--  v-for="option in toggleOptions"-->
-      <!--  :key="option.key"-->
-      <!--  :class="{ 'col-sm-6': !compact }"-->
-      <!--  class="form-check form-switch col-12"-->
-      <!--&gt;-->
-      <!--  <input-->
-      <!--    v-model="options[option.key]"-->
-      <!--    @change="saveOptions"-->
-      <!--    :id="option.key"-->
-      <!--    class="form-check-input"-->
-      <!--    type="checkbox"-->
-      <!--    role="switch"-->
-      <!--  />-->
-      <!--  <label class="form-check-label" :for="option.key">{{ option.label }}</label>-->
-      <!--  <i-->
-      <!--    v-if="!isMobile"-->
-      <!--    class="fa-solid fa-circle-info ms-2"-->
-      <!--    data-bs-toggle="tooltip"-->
-      <!--    :data-bs-title="option.tooltip"-->
-      <!--  ></i>-->
-      <!--</div>-->
     </div>
   </form>
 </template>

@@ -1,8 +1,9 @@
-import { openExtPanel, openPopup, openSidePanel } from '@/utils/extension.ts'
+import { useAppConfig } from '#imports'
+import { isFirefox } from '@/utils/system.ts'
 import { Options, defaultOptions, getOptions } from '@/utils/options.ts'
+import { openExtPanel, openPopup, openSidePanel } from '@/utils/extension.ts'
 import { extractSelectionLinks, extractAndOpen } from '@/utils/links.ts'
 import { createContextMenus } from './menus.ts'
-import { isFirefox } from '@/utils/system.ts'
 
 let options: Options
 
@@ -13,72 +14,19 @@ export default defineBackground(() => {
 
   chrome.runtime.onInstalled.addListener(onInstalled)
   chrome.runtime.onStartup.addListener(onStartup)
-  chrome.runtime.onMessage.addListener(onMessage)
   chrome.storage.onChanged.addListener(onChanged)
+  chrome.runtime.onMessage.addListener(onMessage)
   chrome.commands?.onCommand.addListener(onCommand)
   chrome.contextMenus?.onClicked.addListener(onClicked)
 })
 
 async function setUninstallURL() {
   const manifest = chrome.runtime.getManifest()
-  const url = new URL(`${manifest.homepage_url}`)
+  if (!manifest.homepage_url) return console.warn('No manifest.homepage_url')
+  const url = new URL(manifest.homepage_url)
   url.pathname = '/uninstall/'
   url.searchParams.append('version', manifest.version)
   await chrome.runtime.setUninstallURL(url.href)
-  console.debug(`setUninstallURL: ${url.href}`)
-}
-
-async function onInstalled(details: chrome.runtime.InstalledDetails) {
-  console.log('onInstalled:', details)
-
-  options = await setDefaultOptions(defaultOptions)
-  console.debug('options:', options)
-
-  createContextMenus(options)
-
-  const manifest = chrome.runtime.getManifest()
-  console.debug('manifest:', manifest)
-
-  // await chrome.runtime.setUninstallURL(`${manifest.homepage_url}/issues`)
-  await setUninstallURL()
-
-  if (details.reason === chrome.runtime.OnInstalledReason.INSTALL) {
-    // await chrome.runtime.openOptionsPage()
-    // const hasPerms = await checkPerms(manifest)
-    const hasPerms = await chrome.permissions.contains({
-      origins: manifest.host_permissions,
-    })
-    console.debug('hasPerms:', hasPerms)
-    if (hasPerms) {
-      await chrome.runtime.openOptionsPage()
-    } else {
-      const url = chrome.runtime.getURL('permissions.html')
-      await chrome.tabs.create({ active: true, url })
-    }
-  } else if (details.reason === chrome.runtime.OnInstalledReason.UPDATE) {
-    if (options.showUpdate) {
-      if (manifest.version !== details.previousVersion) {
-        const url = `${manifest.homepage_url}/releases/tag/${manifest.version}`
-        await chrome.tabs.create({ active: false, url })
-      }
-    }
-  }
-}
-
-async function onStartup() {
-  console.log('onStartup')
-  if (isFirefox) {
-    console.log('Firefox Startup Workarounds')
-    // NOTE: Confirm these checks are still necessary...
-    options = await getOptions()
-    console.debug('options:', options)
-    createContextMenus(options)
-
-    // const manifest = chrome.runtime.getManifest()
-    // console.debug('manifest:', manifest)
-    // await chrome.runtime.setUninstallURL(`${manifest.homepage_url}/issues`)
-    await setUninstallURL()
-  }
 }
 
 async function setDefaultOptions(defaultOptions: object) {
@@ -100,6 +48,73 @@ async function setDefaultOptions(defaultOptions: object) {
   return options
 }
 
+async function onInstalled(details: chrome.runtime.InstalledDetails) {
+  console.log('onInstalled:', details)
+
+  options = await setDefaultOptions(defaultOptions)
+  console.debug('options:', options)
+
+  createContextMenus(options).catch(console.warn)
+  setUninstallURL().catch(console.warn)
+
+  const config = useAppConfig()
+  console.log('config:', config)
+  const manifest = chrome.runtime.getManifest()
+  console.debug('manifest:', manifest)
+
+  if (details.reason === chrome.runtime.OnInstalledReason.INSTALL) {
+    // await chrome.runtime.openOptionsPage()
+    // const hasPerms = await checkPerms(manifest)
+    const hasPerms = await chrome.permissions.contains({
+      origins: manifest.host_permissions,
+    })
+    console.debug('hasPerms:', hasPerms)
+    if (hasPerms) {
+      await chrome.runtime.openOptionsPage()
+    } else {
+      const url = chrome.runtime.getURL('permissions.html')
+      await chrome.tabs.create({ active: true, url })
+    }
+  } else if (details.reason === chrome.runtime.OnInstalledReason.UPDATE) {
+    if (options.showUpdate) {
+      if (manifest.version !== details.previousVersion) {
+        const url = `${config.github_url}/releases/tag/${manifest.version}`
+        await chrome.tabs.create({ active: false, url })
+      }
+    }
+  }
+}
+
+async function onStartup() {
+  console.log('onStartup')
+  if (isFirefox) {
+    console.log('Firefox Startup Workarounds')
+    // NOTE: Confirm these checks are still necessary...
+    options = await getOptions()
+    console.debug('options:', options)
+    createContextMenus(options).catch(console.warn)
+    setUninstallURL().catch(console.warn)
+  }
+}
+
+function onChanged(changes: object, namespace: string) {
+  // console.debug('background/index.ts: onChanged:', changes, namespace)
+  for (const [key, { oldValue, newValue }] of Object.entries(changes)) {
+    if (namespace === 'sync' && key === 'options' && oldValue && newValue) {
+      options = newValue
+      if (oldValue.contextMenu !== newValue.contextMenu) {
+        if (newValue?.contextMenu) {
+          console.log('%c Enabled contextMenu...', 'color: SpringGreen')
+          createContextMenus(newValue).catch(console.warn)
+        } else {
+          console.log('%c Disabled contextMenu...', 'color: OrangeRed')
+          chrome.contextMenus?.removeAll().catch(console.warn)
+        }
+      }
+    }
+  }
+}
+
 function onMessage(
   message: any,
   _sender: chrome.runtime.MessageSender,
@@ -111,36 +126,22 @@ function onMessage(
   }
 }
 
-function onChanged(changes: object, namespace: string) {
-  // console.debug('onChanged:', changes, namespace)
-  for (const [key, { oldValue, newValue }] of Object.entries(changes)) {
-    if (namespace === 'sync' && key === 'options' && oldValue && newValue) {
-      options = newValue
-      if (oldValue.contextMenu !== newValue.contextMenu) {
-        if (newValue?.contextMenu) {
-          console.log('%c Enabled contextMenu...', 'color: SpringGreen')
-          createContextMenus(newValue)
-        } else {
-          console.log('%c Disabled contextMenu...', 'color: OrangeRed')
-          chrome.contextMenus?.removeAll()
-        }
-      }
-    }
-  }
-}
-
 async function onCommand(command: string, tab?: chrome.tabs.Tab) {
   console.debug('onCommand:', command, tab)
-  if (command === 'openOptions') {
-    await chrome.runtime.openOptionsPage()
-  } else if (command === 'openExtPanel') {
-    await openExtPanel()
-  } else if (command === 'openSidePanel') {
-    openSidePanel()
-  } else if (command === 'cmdExtractAll') {
-    await extractAndOpen(options)
-  } else {
-    console.warn(`Unknown Command: ${command}`)
+  try {
+    if (command === 'openOptions') {
+      await chrome.runtime.openOptionsPage()
+    } else if (command === 'openExtPanel') {
+      await openExtPanel()
+    } else if (command === 'openSidePanel') {
+      openSidePanel()
+    } else if (command === 'cmdExtractAll') {
+      await extractAndOpen(options)
+    } else {
+      console.warn(`Unknown Command: ${command}`)
+    }
+  } catch (e) {
+    console.warn(e)
   }
 }
 

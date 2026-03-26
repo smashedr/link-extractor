@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { i18n } from '#imports'
+import { i18n, useAppConfig } from '#imports'
 import { useTitle } from '@/composables/useTitle.ts'
 import { clickOpen } from '@/utils/extension.ts'
 import { isFirefox, isMobile } from '@/utils/system.ts'

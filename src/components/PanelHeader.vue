@@ -58,13 +58,14 @@ console.log('config:', config)
       <!-- flex-grow-1 -->
 
       <div v-if="pageButton" class="ms-1">
-        <button
+        <a
           :title="i18n.t('ui.action.extensionPage')"
+          href="/page.html"
           class="btn btn-sm btn-outline-info"
           @click="openPage(closeWindow)"
         >
           <i class="fa-solid fa-display me-1"></i>
-        </button>
+        </a>
       </div>
 
       <div v-if="!isMobile && panelButton" class="ms-1">
@@ -96,10 +97,8 @@ console.log('config:', config)
       <div v-if="optionsButton" class="ms-1">
         <a
           :title="i18n.t('ui.options')"
-          class="btn btn-sm btn-outline-info"
-          role="button"
           href="/options.html"
-          target="_blank"
+          class="btn btn-sm btn-outline-info"
           @click.prevent="openOptions(closeWindow)"
         >
           <i class="fa-solid fa-gears"></i

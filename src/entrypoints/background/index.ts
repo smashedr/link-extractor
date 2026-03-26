@@ -1,9 +1,9 @@
 import { useAppConfig } from '#imports'
-import { openExtPanel, openPopup, openSidePanel } from '@/utils/extension.ts'
+import { isFirefox } from '@/utils/system.ts'
 import { Options, defaultOptions, getOptions } from '@/utils/options.ts'
+import { openExtPanel, openPopup, openSidePanel } from '@/utils/extension.ts'
 import { extractSelectionLinks, extractAndOpen } from '@/utils/links.ts'
 import { createContextMenus } from './menus.ts'
-import { isFirefox } from '@/utils/system.ts'
 
 let options: Options
 
@@ -14,8 +14,8 @@ export default defineBackground(() => {
 
   chrome.runtime.onInstalled.addListener(onInstalled)
   chrome.runtime.onStartup.addListener(onStartup)
-  chrome.runtime.onMessage.addListener(onMessage)
   chrome.storage.onChanged.addListener(onChanged)
+  chrome.runtime.onMessage.addListener(onMessage)
   chrome.commands?.onCommand.addListener(onCommand)
   chrome.contextMenus?.onClicked.addListener(onClicked)
 })
@@ -27,6 +27,25 @@ async function setUninstallURL() {
   url.pathname = '/uninstall/'
   url.searchParams.append('version', manifest.version)
   await chrome.runtime.setUninstallURL(url.href)
+}
+
+async function setDefaultOptions(defaultOptions: object) {
+  console.log('setDefaultOptions', defaultOptions)
+  options = await getOptions()
+  let changed = false
+  for (const [key, value] of Object.entries(defaultOptions)) {
+    // console.log(`${key}: default: ${value} current: ${options[key]}`)
+    if (options[key] === undefined) {
+      changed = true
+      options[key] = value
+      console.log(`Set %c${key}:`, 'color: Khaki', value)
+    }
+  }
+  if (changed) {
+    await chrome.storage.sync.set({ options })
+    console.log('changed options:', options)
+  }
+  return options
 }
 
 async function onInstalled(details: chrome.runtime.InstalledDetails) {
@@ -78,36 +97,6 @@ async function onStartup() {
   }
 }
 
-async function setDefaultOptions(defaultOptions: object) {
-  console.log('setDefaultOptions', defaultOptions)
-  options = await getOptions()
-  let changed = false
-  for (const [key, value] of Object.entries(defaultOptions)) {
-    // console.log(`${key}: default: ${value} current: ${options[key]}`)
-    if (options[key] === undefined) {
-      changed = true
-      options[key] = value
-      console.log(`Set %c${key}:`, 'color: Khaki', value)
-    }
-  }
-  if (changed) {
-    await chrome.storage.sync.set({ options })
-    console.log('changed options:', options)
-  }
-  return options
-}
-
-function onMessage(
-  message: any,
-  _sender: chrome.runtime.MessageSender,
-  _sendResponse: Function,
-) {
-  console.log('background/index.ts: onMessage:', message)
-  if (message === 'openPopup') {
-    openPopup().catch(console.log)
-  }
-}
-
 function onChanged(changes: object, namespace: string) {
   // console.debug('background/index.ts: onChanged:', changes, namespace)
   for (const [key, { oldValue, newValue }] of Object.entries(changes)) {
@@ -123,6 +112,17 @@ function onChanged(changes: object, namespace: string) {
         }
       }
     }
+  }
+}
+
+function onMessage(
+  message: any,
+  _sender: chrome.runtime.MessageSender,
+  _sendResponse: Function,
+) {
+  console.log('background/index.ts: onMessage:', message)
+  if (message === 'openPopup') {
+    openPopup().catch(console.log)
   }
 }
 

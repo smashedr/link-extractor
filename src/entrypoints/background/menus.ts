@@ -21,16 +21,12 @@ const contexts: chrome.contextMenus.CreateProperties[] = config.map((entry) => (
     : { title: i18n.t(`ctx.${entry.id}` as any) }),
 }))
 
-// NOTE: Below is ported from VanillaJS
-
-export function createContextMenus(options: Options) {
+export async function createContextMenus(options: Options) {
   console.log('createContextMenus:', options)
   if (!options.contextMenu) return console.log('Disabled: options.contextMenu')
   if (!chrome.contextMenus) return console.log('Unsupported: chrome.contextMenus')
-  chrome.contextMenus.removeAll().then(() => {
-    contexts.forEach((item) => {
-      // console.log(item.id, options[item.id!])
-      chrome.contextMenus.create(item)
-    })
+  await chrome.contextMenus.removeAll()
+  contexts.forEach((item) => {
+    chrome.contextMenus.create(item)
   })
 }

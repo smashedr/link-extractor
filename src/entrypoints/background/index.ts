@@ -1,3 +1,4 @@
+import { useAppConfig } from '#imports'
 import { openExtPanel, openPopup, openSidePanel } from '@/utils/extension.ts'
 import { Options, defaultOptions, getOptions } from '@/utils/options.ts'
 import { extractSelectionLinks, extractAndOpen } from '@/utils/links.ts'
@@ -21,11 +22,11 @@ export default defineBackground(() => {
 
 async function setUninstallURL() {
   const manifest = chrome.runtime.getManifest()
-  const url = new URL(`${manifest.homepage_url}`)
+  if (!manifest.homepage_url) return console.warn('No manifest.homepage_url')
+  const url = new URL(manifest.homepage_url)
   url.pathname = '/uninstall/'
   url.searchParams.append('version', manifest.version)
   await chrome.runtime.setUninstallURL(url.href)
-  console.debug(`setUninstallURL: ${url.href}`)
 }
 
 async function onInstalled(details: chrome.runtime.InstalledDetails) {
@@ -34,13 +35,13 @@ async function onInstalled(details: chrome.runtime.InstalledDetails) {
   options = await setDefaultOptions(defaultOptions)
   console.debug('options:', options)
 
-  createContextMenus(options)
+  createContextMenus(options).catch(console.warn)
+  setUninstallURL().catch(console.warn)
 
+  const config = useAppConfig()
+  console.log('config:', config)
   const manifest = chrome.runtime.getManifest()
   console.debug('manifest:', manifest)
-
-  // await chrome.runtime.setUninstallURL(`${manifest.homepage_url}/issues`)
-  await setUninstallURL()
 
   if (details.reason === chrome.runtime.OnInstalledReason.INSTALL) {
     // await chrome.runtime.openOptionsPage()
@@ -58,7 +59,7 @@ async function onInstalled(details: chrome.runtime.InstalledDetails) {
   } else if (details.reason === chrome.runtime.OnInstalledReason.UPDATE) {
     if (options.showUpdate) {
       if (manifest.version !== details.previousVersion) {
-        const url = `${manifest.homepage_url}/releases/tag/${manifest.version}`
+        const url = `${config.github_url}/releases/tag/${manifest.version}`
         await chrome.tabs.create({ active: false, url })
       }
     }
@@ -72,12 +73,8 @@ async function onStartup() {
     // NOTE: Confirm these checks are still necessary...
     options = await getOptions()
     console.debug('options:', options)
-    createContextMenus(options)
-
-    // const manifest = chrome.runtime.getManifest()
-    // console.debug('manifest:', manifest)
-    // await chrome.runtime.setUninstallURL(`${manifest.homepage_url}/issues`)
-    await setUninstallURL()
+    createContextMenus(options).catch(console.warn)
+    setUninstallURL().catch(console.warn)
   }
 }
 
@@ -112,17 +109,17 @@ function onMessage(
 }
 
 function onChanged(changes: object, namespace: string) {
-  // console.debug('onChanged:', changes, namespace)
+  // console.debug('background/index.ts: onChanged:', changes, namespace)
   for (const [key, { oldValue, newValue }] of Object.entries(changes)) {
     if (namespace === 'sync' && key === 'options' && oldValue && newValue) {
       options = newValue
       if (oldValue.contextMenu !== newValue.contextMenu) {
         if (newValue?.contextMenu) {
           console.log('%c Enabled contextMenu...', 'color: SpringGreen')
-          createContextMenus(newValue)
+          createContextMenus(newValue).catch(console.warn)
         } else {
           console.log('%c Disabled contextMenu...', 'color: OrangeRed')
-          chrome.contextMenus?.removeAll()
+          chrome.contextMenus?.removeAll().catch(console.warn)
         }
       }
     }
@@ -131,16 +128,20 @@ function onChanged(changes: object, namespace: string) {
 
 async function onCommand(command: string, tab?: chrome.tabs.Tab) {
   console.debug('onCommand:', command, tab)
-  if (command === 'openOptions') {
-    await chrome.runtime.openOptionsPage()
-  } else if (command === 'openExtPanel') {
-    await openExtPanel()
-  } else if (command === 'openSidePanel') {
-    openSidePanel()
-  } else if (command === 'cmdExtractAll') {
-    await extractAndOpen(options)
-  } else {
-    console.warn(`Unknown Command: ${command}`)
+  try {
+    if (command === 'openOptions') {
+      await chrome.runtime.openOptionsPage()
+    } else if (command === 'openExtPanel') {
+      await openExtPanel()
+    } else if (command === 'openSidePanel') {
+      openSidePanel()
+    } else if (command === 'cmdExtractAll') {
+      await extractAndOpen(options)
+    } else {
+      console.warn(`Unknown Command: ${command}`)
+    }
+  } catch (e) {
+    console.warn(e)
   }
 }
 

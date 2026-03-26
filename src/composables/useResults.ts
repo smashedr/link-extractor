@@ -4,7 +4,7 @@ import { LinkData } from '@/utils/links.ts'
 
 console.debug('%cLOADED: composables/useResults.ts', 'color: Orange')
 
-export const STORE_KEY = 'results'
+const STORE_KEY = 'results'
 
 export async function setResults(links: LinkData[]) {
   console.debug('composables/useResults.ts: setResults')

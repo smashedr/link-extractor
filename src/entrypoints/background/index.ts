@@ -148,24 +148,27 @@ async function onClicked(ctx: chrome.contextMenus.OnClickData, tab?: chrome.tabs
   console.debug('onClicked:', ctx, tab)
   if (!tab?.id) return
   try {
-    if (ctx.menuItemId === 'ctxOpenOptions') {
+    if (ctx.menuItemId === 'openOptions') {
       await chrome.runtime.openOptionsPage()
     } else if (ctx.menuItemId === 'openPopup') {
+      // NOTE: Not added to menus.ts
       await openPopup()
     } else if (ctx.menuItemId === 'openExtPanel') {
+      // NOTE: Not added to menus.ts
       await openExtPanel()
     } else if (ctx.menuItemId === 'openSidePanel') {
+      // NOTE: Not added to menus.ts
       openSidePanel()
-    } else if (ctx.menuItemId === 'ctxCopyLinks') {
+    } else if (ctx.menuItemId === 'copyLinks') {
       console.log(`%c ${ctx.menuItemId}`, 'color: Yellow')
-    } else if (ctx.menuItemId === 'ctxExtSelection') {
+    } else if (ctx.menuItemId === 'extSelection') {
       console.log(`%c ${ctx.menuItemId}`, 'color: Lime')
       const [{ result }] = await chrome.scripting.executeScript({
         target: { tabId: tab.id },
         func: extractSelectionLinks,
       })
       console.log('result:', result)
-    } else if (ctx.menuItemId === 'ctxExtLinks') {
+    } else if (ctx.menuItemId === 'extLinks') {
       console.log(`%c ${ctx.menuItemId}`, 'color: Lime')
       await extractAndOpen(options)
     } else {

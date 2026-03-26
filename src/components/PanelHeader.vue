@@ -62,7 +62,7 @@ console.log('config:', config)
           :title="i18n.t('ui.action.extensionPage')"
           href="/page.html"
           class="btn btn-sm btn-outline-info"
-          @click="openPage(closeWindow)"
+          @click.prevent="openPage(closeWindow)"
         >
           <i class="fa-solid fa-display me-1"></i>
         </a>

@@ -1,39 +1,45 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted } from 'vue'
-import { LinkData, processLinks } from '@/utils/links.ts'
+import { filterLinks, processLinks } from '@/utils/links.ts'
+import { useResults } from '@/composables/useResults.ts'
+import FilterSelect from '@/components/FilterSelect.vue'
 
 console.debug('%cLOADED: components/LinksTable.vue', 'color: Orange')
 
-const links = ref<LinkData[]>([])
+const results = useResults()
 
-function onChanged(changes: object) {
-  console.debug('components/LinksTable.vue: onChanged:', changes)
-  for (const [key, { newValue }] of Object.entries(changes)) {
-    if (key === 'results') {
-      console.debug('%c newValue:', 'color: SpringGreen', newValue)
-      links.value = newValue as LinkData[]
-    }
+/*
+TODO: Consider making this a composable
+  - Update on options change
+ */
+const links = ref()
+watch(
+  results,
+  async (data) => {
+    console.log('%c WATCH RESULTS CHANGE:', 'color: Yellow', data)
+    // TODO: Consider setting processed as a ref to use in onChanged
+    const processed = await processLinks(data)
+    console.debug('processed:', processed)
+    links.value = processed
+  },
+  { deep: true },
+)
+
+async function onChange(filter: Filter) {
+  console.debug('LinksTable.vue - onChange:', filter)
+  console.log('links.value:', links.value)
+  if (filter) {
+    links.value = await filterLinks(filter, results.value)
+    console.log('links.value:', links.value)
+  } else {
+    links.value = results.value
+    console.log('links.value:', links.value)
   }
 }
-
-// NOTE: Make a useResults.ts composable or a reusable function...
-onMounted(async () => {
-  chrome.storage.local.onChanged.addListener(onChanged)
-  const { results } = await chrome.storage.local.get('results')
-  console.debug('%cMOUNTED: components/LinksTable.vue:', 'color: Lime')
-  const linkData = (results || []) as LinkData[]
-  console.debug('linkData:', linkData)
-  const processed = await processLinks(linkData)
-  console.debug('processed:', processed)
-  links.value = processed
-})
-onUnmounted(() => {
-  chrome.storage.local.onChanged.removeListener(onChanged)
-})
 </script>
 
 <template>
   <div>
+    <FilterSelect @change="onChange" />
     <div class="table-wrapper">
       <table id="links-table" class="table table-sm table-striped table-hover small w-100">
         <thead class="">

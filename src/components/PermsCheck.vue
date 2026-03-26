@@ -37,8 +37,7 @@ async function updatePerms() {
 
 async function grantPerms(event: Event) {
   console.debug('grantPerms:', event)
-  // noinspection ES6MissingAwait
-  requestPerms()
+  requestPerms().catch(console.log)
   if (props.closeWindow) {
     window.close()
   }

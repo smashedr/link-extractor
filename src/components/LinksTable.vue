@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { filterLinks, processLinks } from '@/utils/links.ts'
+import { processLinkOptions, processLinkFilters } from '@/utils/links.ts'
 import { useResults } from '@/composables/useResults.ts'
 import FilterSelect from '@/components/FilterSelect.vue'
 
@@ -7,31 +7,35 @@ console.debug('%cLOADED: components/LinksTable.vue', 'color: Orange')
 
 const results = useResults()
 
-/*
-TODO: Consider making this a composable
-  - Update on options change
- */
 const links = ref()
+
+// TODO: watch options and update on options changes...
+
 watch(
   results,
   async (data) => {
-    console.log('%c WATCH RESULTS CHANGE:', 'color: Yellow', data)
+    console.log('%c RESULTS WATCH:', 'color: Yellow', data)
     // TODO: Consider setting processed as a ref to use in onChanged
-    const processed = await processLinks(data)
+    const processed = await processLinkOptions(data)
     console.debug('processed:', processed)
     links.value = processed
   },
   { deep: true },
 )
 
+// TODO: This needs to be a ref and applied in the watcher above
 async function onChange(filter: Filter) {
   console.debug('LinksTable.vue - onChange:', filter)
   console.log('links.value:', links.value)
+
+  const processed = await processLinkOptions(results.value)
+  console.debug('processed:', processed)
+
   if (filter) {
-    links.value = await filterLinks(filter, results.value)
+    links.value = await processLinkFilters(filter, processed)
     console.log('links.value:', links.value)
   } else {
-    links.value = results.value
+    links.value = processed
     console.log('links.value:', links.value)
   }
 }

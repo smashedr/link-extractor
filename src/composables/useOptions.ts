@@ -2,6 +2,8 @@ import { ref, onMounted, onUnmounted } from 'vue'
 import type { Ref } from 'vue'
 import type { Options } from '@/utils/options.ts'
 
+console.debug('%cLOADED: composables/useOptions.ts', 'color: Orange')
+
 export function useOptions(): Ref<Options> {
   const options = ref<Options>({} as Options)
 

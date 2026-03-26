@@ -33,14 +33,13 @@ export function useResults(): Ref<LinkData[]> {
     }
   }
 
-  if (!chrome.storage.local.onChanged.hasListener(onChanged)) {
-    chrome.storage.local.onChanged.addListener(onChanged)
-  }
-
-  onMounted(() => {
-    getResults()
-      .then((results) => (items.value = results))
-      .catch(console.warn)
+  onMounted(async () => {
+    const results = await getResults()
+    console.log('useResults.ts - onMounted - results:', results)
+    items.value = results
+    if (!chrome.storage.local.onChanged.hasListener(onChanged)) {
+      chrome.storage.local.onChanged.addListener(onChanged)
+    }
   })
   onUnmounted(() => {
     chrome.storage.local.onChanged.removeListener(onChanged)

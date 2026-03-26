@@ -113,28 +113,30 @@ export async function extractAndOpen(options: Options) {
  * VanillaJS Process Links
  * TODO: Rewrite and split up this function...
  */
-export async function processLinks(links: LinkData[]) {
-  console.debug('processLinks:', links)
+export async function processLinkOptions(links: LinkData[]) {
+  console.debug('%c processLinkOptions:', 'color: SpringGreen', links.length)
   // const urlFilter = urlParams.get('filter')
   // const onlyDomains = urlParams.has('domains')
 
   // TODO: Determine if options should be passed or gotten
   const options = await getOptions()
-  console.debug('options:', options)
+  // console.debug('options:', options)
 
-  // Set Table Options
-  if (options.linksTruncate) {
-    console.debug('%c linksTruncate', 'color: Red')
-    // dtOptions.columnDefs[0].className += ' truncate'
-    // window.addEventListener('resize', windowResize)
-    // document.querySelectorAll('table').forEach((table) => {
-    //   table.style.tableLayout = 'fixed'
-    // })
-  }
-  if (options.linksNoWrap) {
-    console.debug('%c linksNoWrap', 'color: Red')
-    // dtOptions.columnDefs[0].className += ' text-nowrap'
-  }
+  // // Set Table Options
+  // if (options.linksTruncate) {
+  //   console.debug('%c linksTruncate', 'color: Red')
+  //   // dtOptions.columnDefs[0].className += ' truncate'
+  //   // window.addEventListener('resize', windowResize)
+  //   // document.querySelectorAll('table').forEach((table) => {
+  //   //   table.style.tableLayout = 'fixed'
+  //   // })
+  // }
+
+  // if (options.linksNoWrap) {
+  //   console.debug('%c linksNoWrap', 'color: Red')
+  //   // dtOptions.columnDefs[0].className += ' text-nowrap'
+  // }
+
   // console.debug('table-responsive')
   // document.querySelectorAll('.table-wrapper').forEach((el) => {
   //     el.classList.add('table-responsive')
@@ -142,14 +144,12 @@ export async function processLinks(links: LinkData[]) {
 
   // Filter links by ://
   if (options.defaultFilter) {
-    console.debug('%c defaultFilter', 'color: Lime')
     links = links.filter((link) => link.href.lastIndexOf('://', 10) > 0)
+    console.debug('%c defaultFilter', 'color: Yellow', links.length)
   }
-  console.debug('links.length:', links.length)
 
   // Remove duplicate and sort links
   if (options.removeDuplicates) {
-    console.debug('%c removeDuplicates', 'color: Lime')
     const hrefs: string[] = []
     links = links.filter((value) => {
       if (hrefs.includes(value.href)) {
@@ -159,8 +159,8 @@ export async function processLinks(links: LinkData[]) {
         return true
       }
     })
+    console.debug('%c removeDuplicates', 'color: Yellow', links.length)
   }
-  console.debug('links.length:', links.length)
 
   // // Enable stateSave in datatables
   // if (options.saveState) {
@@ -194,14 +194,15 @@ export async function processLinks(links: LinkData[]) {
   //   linksTable.rows.add(links).draw()
   // }
 
-  // Extract domains from items, sort, and remove null
-  let domains = [...new Set(links.map((link) => link.origin))]
-  domains = domains.filter(function (el) {
-    return el != null
-  })
-  console.debug('domains:', domains)
-  const mappedDomains = domains.map((domain) => [domain])
-  console.debug('mappedDomains:', mappedDomains)
+  // // Extract domains from items, sort, and remove null
+  // let domains = [...new Set(links.map((link) => link.origin))]
+  // domains = domains.filter(function (el) {
+  //   return el != null
+  // })
+  // console.debug('domains:', domains)
+  // const mappedDomains = domains.map((domain) => [domain])
+  // console.debug('mappedDomains:', mappedDomains)
+
   // document.getElementById('domains-total').textContent = domains.length.toString()
   // if (domains.length) {
   //   const domainsElements = document.querySelectorAll('.domains')
@@ -230,20 +231,21 @@ export async function processLinks(links: LinkData[]) {
   return links
 }
 
-export async function filterLinks(
+export async function processLinkFilters(
   filter: Filter,
   links: LinkData[],
 ): Promise<LinkData[]> {
-  // console.log('filterLinks - filter:', filter)
-  // console.log('filterLinks - links:', links)
+  console.debug('%c processLinkFilters:', 'color: SpringGreen', links.length, filter)
 
   // TODO: Determine if options should be passed or gotten
   const options = await getOptions()
-  console.debug('options:', options)
+  // console.debug('options:', options)
 
   const re = new RegExp(filter.regex, options.flags)
-  console.debug(`Filtering with regex: ${re} / ${options.flags}`)
+  console.debug(`Filtering with regex: %c${re}`, 'color: Yellow')
   // TODO: WIP: This is not yet finished and just copied...
-  links = links.filter((item) => re.exec(item.href) !== null)
+  // links = links.filter((item) => re.exec(item.href) !== null)
+  links = links.filter((item) => item.href.search(re) !== -1)
+  console.debug('%c links.length', 'color: SpringGreen', links.length)
   return links
 }

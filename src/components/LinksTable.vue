@@ -3,29 +3,25 @@ import { ref } from 'vue'
 import { processLinkOptions, processLinkFilters } from '@/utils/links.ts'
 import { useResults } from '@/composables/useResults.ts'
 import FilterSelect from '@/components/FilterSelect.vue'
-// import { useOptions } from '@/composables/useOptions.ts'
+import { watchOptions, useOptions } from '@/composables/useOptions.ts'
 
 console.debug('%cLOADED: components/LinksTable.vue', 'color: Orange')
 
 const results = useResults()
-// const options = useOptions()
+const options = useOptions()
 
 const linksRef = ref()
 const filterRef = ref()
 
-// // TODO: INOP: watch options and update on options changes...
-// watch(
-//   options,
-//   async (data) => {
-//     console.log('%c WATCH: options:', 'color: Yellow', data)
-//   },
-//   { deep: true },
-// )
+watchOptions(options, ['removeDuplicates', 'defaultFilter'], async (newOptions: Options) => {
+  console.log('%c watchOptions:', 'color: Yellow', newOptions)
+  await processData()
+})
 
 watch(
   results,
   async (data) => {
-    console.log('%c WATCH: results:', 'color: Yellow', data)
+    console.log('%c watch: results:', 'color: Yellow', data)
     await processData()
   },
   { deep: true },
@@ -54,6 +50,8 @@ async function onChange(filter: Filter) {
   console.debug('filterRef.value:', filterRef.value)
   await processData()
 }
+
+// TODO: Add method to pass and set filterRef onMounted
 </script>
 
 <template>

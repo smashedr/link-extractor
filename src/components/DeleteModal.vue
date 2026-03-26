@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { i18n } from '#imports'
 import { ref } from 'vue'
 import { Modal } from 'bootstrap'
 import { Filter } from '@/utils/filters.ts'
@@ -38,7 +39,13 @@ defineExpose({ show })
             <h1 class="modal-title fs-5 text-truncate" id="delete-modal-label">
               Delete <span :class="{ 'text-warning': item?.name }">{{ item?.name || 'Filter' }}</span>
             </h1>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" tabindex="-1"></button>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              :aria-label="i18n.t('ui.action.close')"
+              tabindex="-1"
+            ></button>
           </div>
           <div class="modal-body p-2 d-flex justify-content-center align-items-baseline gap-1">
             <span class="flex-shrink-0">Filter:</span>
@@ -48,7 +55,9 @@ defineExpose({ show })
             <button type="button" class="btn btn-danger me-auto" @click="handleConfirm">
               Delete <i class="fa-regular fa-trash-can ms-2"></i>
             </button>
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+              {{ i18n.t('ui.action.cancel') }}
+            </button>
           </div>
         </div>
       </div>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { getMsg } from '@/utils/index.ts'
+import { i18n } from '#imports'
 import { extractAndOpen } from '@/utils/links.ts'
 import { useOptions } from '@/composables/useOptions.ts'
 import { fmtFilterName, useFilters } from '@/composables/useFilters.ts'
@@ -37,10 +37,10 @@ async function extractLinks() {
   <div>
     <div class="btn-group btn-group-sm w-100 mb-1" role="group" aria-label="Button group with nested dropdown">
       <button @click.prevent="extractLinks" type="button" class="btn btn-success flex-grow-1">
-        <i class="fa-solid fa-link me-1"></i> {{ getMsg('AllLinks') }}
+        <i class="fa-solid fa-link me-1"></i> {{ i18n.t('ui.links.all') }}
       </button>
       <button type="button" class="btn btn-primary flex-grow-1">
-        <i class="fa-solid fa-globe me-1"></i> {{ getMsg('Domains') }}
+        <i class="fa-solid fa-globe me-1"></i> {{ i18n.t('ui.links.domains') }}
       </button>
       <div class="btn-group btn-group-sm" role="group">
         <button
@@ -49,7 +49,7 @@ async function extractLinks() {
           data-bs-toggle="dropdown"
           aria-expanded="false"
         >
-          {{ getMsg('Filters') }}
+          {{ i18n.t('ui.filters.filters') }}
         </button>
         <ul class="dropdown-menu overflow-y-auto overflow-x-hidden">
           <li v-if="filters?.length" v-for="filter of filters">
@@ -57,7 +57,7 @@ async function extractLinks() {
           </li>
           <li v-else>
             <a class="dropdown-item" href="/options.html" @click.prevent="openOptions(props.closeWindow)">{{
-              getMsg('NoSavedFilters')
+              i18n.t('ui.filters.noSaved')
             }}</a>
           </li>
         </ul>
@@ -65,20 +65,20 @@ async function extractLinks() {
     </div>
 
     <form @submit.prevent="onSubmit" id="filter-form">
-      <label for="filter-input" class="visually-hidden">{{ getMsg('QuickFilter') }}</label>
+      <label for="filter-input" class="visually-hidden">{{ i18n.t('ui.filters.quick') }}</label>
       <div class="input-group input-group-sm">
         <input
           id="filter-input"
           type="text"
           class="form-control form-control-sm"
-          :placeholder="getMsg('QuickFilter')"
-          :aria-label="getMsg('QuickFilter')"
+          :placeholder="i18n.t('ui.filters.quick')"
+          :aria-label="i18n.t('ui.filters.quick')"
           aria-describedby="submit-filter"
           autocomplete="off"
           autofocus
           required
         />
-        <button class="btn btn-outline-success" type="submit" id="submit-filter">{{ getMsg('Go') }}</button>
+        <button class="btn btn-outline-success" type="submit" id="submit-filter">{{ i18n.t('ui.action.go') }}</button>
       </div>
     </form>
   </div>

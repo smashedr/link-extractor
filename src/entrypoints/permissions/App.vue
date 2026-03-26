@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { getMsg } from '@/utils/index.ts'
+import { i18n } from '#imports'
 import { useTitle } from '@/composables/useTitle.ts'
 import BackToTop from '@/components/BackToTop.vue'
 import PermsCheck from '@/components/PermsCheck.vue'
@@ -44,7 +44,7 @@ useTitle('Permissions')
 
           <p>To download an image on Chrome for upload to the API, host permissions are required.</p>
           <a class="btn btn-lg btn-outline-info w-100 mb-3" href="/options.html" @click.prevent="openOptions()">
-            <i class="fa-solid fa-sliders me-1"></i> {{ getMsg('ctxOpenOptions') }}</a
+            <i class="fa-solid fa-sliders me-1"></i> {{ i18n.t('ctx.openOptions') }}</a
           >
 
           <hr class="mt-0" />

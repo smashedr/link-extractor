@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { getMsg } from '@/utils/index.ts'
+import { i18n } from '#imports'
 import { clickOpen, openExtPanel, openOptions, openPage, openPopup, openSidePanel } from '@/utils/extension.ts'
 import { isMobile } from '@/utils/system.ts'
 import ThemeSwitch from '@/components/ThemeSwitch.vue'
@@ -36,7 +36,7 @@ console.log('config:', config)
 
       <div class="d-flex flex-grow-1 overflow-hidden align-items-baseline">
         <a
-          :title="getMsg('HomePage')"
+          :title="i18n.t('ui.homePage')"
           class="link-body-emphasis text-decoration-none fs-4"
           :href="manifest.homepage_url"
           target="_blank"
@@ -46,7 +46,7 @@ console.log('config:', config)
           {{ config.short_name }}</a
         >
         <a
-          :title="getMsg('ReleaseNotes')"
+          :title="i18n.t('ui.releaseNotes')"
           class="link-body-emphasis text-decoration-none small ms-1"
           :href="`${config.github_url}/releases/tag/${manifest.version}`"
           target="_blank"
@@ -58,14 +58,18 @@ console.log('config:', config)
       <!-- flex-grow-1 -->
 
       <div v-if="pageButton" class="ms-1">
-        <button :title="getMsg('ExtensionPage')" class="btn btn-sm btn-outline-info" @click="openPage(closeWindow)">
+        <button
+          :title="i18n.t('ui.action.extensionPage')"
+          class="btn btn-sm btn-outline-info"
+          @click="openPage(closeWindow)"
+        >
           <i class="fa-solid fa-display me-1"></i>
         </button>
       </div>
 
       <div v-if="!isMobile && panelButton" class="ms-1">
         <button
-          :title="getMsg('ExtensionPanel')"
+          :title="i18n.t('ui.action.extensionPanel')"
           class="btn btn-sm btn-outline-info"
           @click="openExtPanel(closeWindow)"
         >
@@ -74,20 +78,24 @@ console.log('config:', config)
       </div>
 
       <div v-if="!isMobile && sideButton" class="ms-1">
-        <button :title="getMsg('SidePanel')" class="btn btn-sm btn-outline-info" @click="openSidePanel(closeWindow)">
+        <button
+          :title="i18n.t('ui.action.sidePanel')"
+          class="btn btn-sm btn-outline-info"
+          @click="openSidePanel(closeWindow)"
+        >
           <i class="fa-solid fa-table-columns"></i>
         </button>
       </div>
 
       <div v-if="!isMobile && popupButton" class="ms-1">
-        <button :title="getMsg('OpenPopup')" class="btn btn-sm btn-outline-info" @click="openPopup()">
+        <button :title="i18n.t('ui.action.openPopup')" class="btn btn-sm btn-outline-info" @click="openPopup()">
           <i class="fa-solid fa-window-maximize"></i>
         </button>
       </div>
 
       <div v-if="optionsButton" class="ms-1">
         <a
-          :title="getMsg('Options')"
+          :title="i18n.t('ui.options')"
           class="btn btn-sm btn-outline-info"
           role="button"
           href="/options.html"

@@ -1,6 +1,6 @@
 <script setup lang="ts">
+import { i18n } from '#imports'
 import { onMounted } from 'vue'
-import { getMsg } from '@/utils/index.ts'
 import { useOptions } from '@/composables/useOptions.ts'
 import { saveKeyValue, saveOptions } from '@/utils/options.ts'
 import { isMobile } from '@/utils/system.ts'
@@ -32,8 +32,8 @@ const toggleOptions = [
   'showUpdate',
 ].map((key) => ({
   key,
-  label: getMsg(key),
-  tooltip: getMsg(key + 'Tip'),
+  label: i18n.t(`option.toggle.${key}` as any),
+  tooltip: i18n.t(`option.toggle.${key}Tip` as any),
 }))
 console.log('toggleOptions:', toggleOptions)
 

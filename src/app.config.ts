@@ -1,5 +1,4 @@
-import { defineAppConfig } from '#imports'
-import { getMsg } from '@/utils'
+import { i18n, defineAppConfig } from '#imports'
 
 declare module 'wxt/utils/define-app-config' {
   // noinspection JSUnusedGlobalSymbols
@@ -13,8 +12,8 @@ declare module 'wxt/utils/define-app-config' {
 
 // noinspection JSUnusedGlobalSymbols
 export default defineAppConfig({
-  // name: getMsg('extName'), // DUPLICATION from Manifest
-  short_name: getMsg('extShortName'),
+  // name: i18n.t('name'), // DUPLICATION from Manifest
+  short_name: i18n.t('shortName'),
   // homepage_url: 'https://link-extractor.cssnr.com/', // DUPLICATION from Manifest
   github_url: 'https://github.com/cssnr/link-extractor',
 })

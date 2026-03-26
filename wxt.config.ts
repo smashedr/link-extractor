@@ -16,7 +16,7 @@ const icons = {
 // noinspection JSUnusedGlobalSymbols
 export default defineConfig({
   srcDir: 'src',
-  modules: ['@wxt-dev/module-vue'],
+  modules: ['@wxt-dev/module-vue', '@wxt-dev/i18n/module'],
 
   // https://wxt.dev/guide/essentials/config/auto-imports.html#disabling-auto-imports
   // imports: false,
@@ -30,9 +30,9 @@ export default defineConfig({
     return {
       icons,
       default_locale: 'en',
-      name: '__MSG_extName__',
-      // short_name: '__MSG_extShortName__',
-      description: '__MSG_extDescription__',
+      name: '__MSG_name__',
+      // short_name: '__MSG_shortName__',
+      description: '__MSG_description__',
       homepage_url: 'https://link-extractor.cssnr.com/',
 
       permissions: ['activeTab', 'contextMenus', 'scripting', 'storage'],
@@ -40,22 +40,22 @@ export default defineConfig({
 
       commands: {
         _execute_action: {
-          description: '__MSG_cmdExecuteAction__',
+          description: '__MSG_cmd_executeAction__',
           suggested_key: { default: 'Alt+Shift+A' },
         },
         cmdExtractAll: {
-          description: '__MSG_cmdExtractAll__',
+          description: '__MSG_cmd_extractAll__',
           suggested_key: { default: 'Alt+Shift+X' },
         },
         cmdExtractSelection: {
-          description: '__MSG_cmdExtractSelection__',
+          description: '__MSG_cmd_extractSelection__',
         },
         cmdCopyAll: {
-          description: '__MSG_cmdCopyAll__',
+          description: '__MSG_cmd_copyAll__',
           suggested_key: { default: 'Alt+Shift+C' },
         },
         cmdCopySelection: {
-          description: '__MSG_cmdCopySelection__',
+          description: '__MSG_cmd_copySelection__',
         },
       },
 

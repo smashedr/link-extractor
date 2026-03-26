@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { getMsg } from '@/utils/index.ts'
+import { i18n } from '#imports'
 import { computed, onMounted, ref } from 'vue'
 import { isFirefox, isMobile } from '@/utils/system.ts'
 import ToastAlerts from '@/components/ToastAlerts.vue'
@@ -51,7 +51,7 @@ onMounted(async () => {
       <!--Note: Consider moving tabAccess to ExtractPanel-->
       <ExtractPanel v-if="tabAccess" :close-window="true" />
       <div v-else class="text-center text-ellipsis border border-danger border-2 rounded p-1 mb-2">
-        {{ getMsg('NoTabAccess') }}.
+        {{ i18n.t('ui.noTabAccess') }}.
       </div>
 
       <OptionsForm :show="['switches']" :compact="true" />

@@ -84,21 +84,30 @@ cmd:
 
 option:
   toggle:
-    removeDuplicates: Remove Duplicates
-    removeDuplicatesTip: Removes duplicate entries from the list.
-    defaultFilter: Default Filter
-    defaultFilterTip: Apply the default filter on load.
-    saveState: Save State
-    saveStateTip: Persist state between sessions.
-    linksTruncate: Truncate Links
-    linksTruncateTip: Truncate long link text.
-    linksNoWrap: No Wrap Links
-    linksNoWrapTip: Prevent links from wrapping.
-    activateLinks: Activate Links
-    activateLinksTip: Make links clickable.
-    extractSide: Extract to Side Panel
-    extractSideTip: Extract Links to the Side Panel.
-    contextMenu: Context Menu
-    contextMenuTip: Show context menu on right click.
-    showUpdate: Show Update
-    showUpdateTip: Show update notifications.
+    removeDuplicates:
+      label: Remove Duplicates
+      tip: Removes duplicate entries from the list.
+    defaultFilter:
+      label: Default Filter
+      tip: Apply the default filter on load.
+    saveState:
+      label: Save State
+      tip: Persist state between sessions.
+    linksTruncate:
+      label: Truncate Links
+      tip: Truncate long link text.
+    linksNoWrap:
+      label: No Wrap Links
+      tip: Prevent links from wrapping.
+    activateLinks:
+      label: Activate Links
+      tip: Make links clickable.
+    extractSide:
+      label: Extract to Side Panel
+      tip: Extract Links to the Side Panel.
+    contextMenu:
+      label: Context Menu
+      tip: Show context menu on right click.
+    showUpdate:
+      label: Show Update
+      tip: Show update notifications.

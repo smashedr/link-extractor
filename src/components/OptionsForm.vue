@@ -34,8 +34,8 @@ const toggleOptions = [
   'showUpdate',
 ].map((key) => ({
   key,
-  label: i18n.t(`option.toggle.${key}` as any),
-  tooltip: i18n.t(`option.toggle.${key}Tip` as any),
+  label: i18n.t(`option.toggle.${key}.label` as any),
+  tooltip: i18n.t(`option.toggle.${key}.tip` as any),
 }))
 console.log('toggleOptions:', toggleOptions)
 
@@ -83,7 +83,7 @@ onMounted(() => {
           :value="(options[option.key] as boolean) || false"
           :name="option.key"
           :label="option.label"
-          :tooltip="option.label"
+          :tooltip="option.tooltip"
           @save="saveKeyValue"
         />
       </template>

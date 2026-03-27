@@ -2,7 +2,7 @@
 import { i18n } from '#imports'
 import { onMounted } from 'vue'
 import { useOptions } from '@/composables/useOptions.ts'
-import { saveKeyValue, saveOptions } from '@/utils/options.ts'
+import { saveKeyValue } from '@/utils/options.ts'
 import { isMobile } from '@/utils/system.ts'
 import { Tooltip } from 'bootstrap'
 import FormSwitch from '@/components/FormSwitch.vue'
@@ -53,7 +53,7 @@ onMounted(() => {
 <template>
   <form>
     <!-- text inputs -->
-    <div v-if="show.includes('inputs')" class="row m-0 g-1">
+    <div v-if="show.includes('inputs')" class="row m-0 g-1 mb-2">
       <div class="col-12">
         <label for="flags" class="form-label"><i class="fa-solid fa-code me-1"></i> Regex Flags</label>
         <i
@@ -64,7 +64,7 @@ onMounted(() => {
         ></i>
         <input
           v-model="options.flags"
-          @change="saveOptions"
+          @change="saveKeyValue('flags', options.flags)"
           id="flags"
           aria-describedby="flagsHelp"
           type="text"

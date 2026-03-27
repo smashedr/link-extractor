@@ -96,6 +96,36 @@ export async function extractTabs(): Promise<LinkData[]> {
   return results
 }
 
+// NOTE: Copied from VanillaJS
+export function extractURLs(text: string): LinkData[] {
+  // console.debug('extractURLs:', text)
+  const urls: LinkData[] = []
+  let urlmatch
+  const regex =
+    /\b((?:[a-z][\w-]+:(?:\/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9.-]+[.][a-z]{2,4}\/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()[\]{};:'".,<>?«»“”‘’]))/gi // NOSONAR
+  while ((urlmatch = regex.exec(text)) !== null) {
+    try {
+      let match = urlmatch[0]
+      match = match.includes('://') ? match : `http://${match}`
+      // console.debug('match:', match)
+      const url = new URL(match)
+      // DUPLICATION
+      urls.push({
+        href: url.href,
+        text: '',
+        title: '',
+        label: '',
+        rel: '',
+        target: '',
+        origin: url.origin,
+      })
+    } catch (e) {
+      console.debug('Error Processing match:', urlmatch, e)
+    }
+  }
+  return urls
+}
+
 // NOTE: Consider accepting extractTabs queryInfo options once implemented...
 export async function extractAndOpen(options: Options) {
   console.log('extractAndOpen:', options)

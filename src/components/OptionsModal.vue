@@ -14,7 +14,7 @@ defineOptions({
   </button>
 
   <div class="modal fade" id="optionsModal" tabindex="-1" aria-labelledby="optionsModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-dialog modal-dialog-scrollable">
       <div class="modal-content">
         <div class="modal-header">
           <ThemeSwitch />
@@ -23,7 +23,11 @@ defineOptions({
         </div>
 
         <div class="modal-body">
-          <OptionsForm :compact="true" :show="['switches']" :switches="['removeDuplicates', 'defaultFilter']" />
+          <OptionsForm
+            :compact="true"
+            :show="['inputs', 'switches']"
+            :switches="['removeDuplicates', 'defaultFilter']"
+          />
         </div>
 
         <!--<div class="modal-footer">-->

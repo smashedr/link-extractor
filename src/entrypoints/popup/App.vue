@@ -7,6 +7,7 @@ import PanelHeader from '@/components/PanelHeader.vue'
 import PermsCheck from '@/components/PermsCheck.vue'
 import OptionsForm from '@/components/OptionsForm.vue'
 import ExtractPanel from '@/components/ExtractPanel.vue'
+import ExtractText from '@/components/ExtractText.vue'
 
 const tabAccess = ref(true)
 
@@ -50,9 +51,12 @@ onMounted(async () => {
 
       <!--Note: Consider moving tabAccess to ExtractPanel-->
       <ExtractPanel v-if="tabAccess" :close-window="true" />
-      <div v-else class="text-center text-ellipsis border border-danger border-2 rounded p-1 mb-2">
+
+      <div v-else class="text-center text-ellipsis border border-danger border-2 rounded p-1">
         {{ i18n.t('ui.noTabAccess') }}.
       </div>
+      <!--<hr class="my-0" />-->
+      <ExtractText />
 
       <OptionsForm :show="['switches']" :compact="true" />
     </div>

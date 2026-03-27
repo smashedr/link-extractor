@@ -1,3 +1,5 @@
+// TODO: Consider consolidating with composables/useFilters.ts
+
 export interface Filter {
   id: string
   regex: string

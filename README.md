@@ -33,7 +33,8 @@
 
 > [!CAUTION]  
 > Development version of [cssnr/link-extractor](https://github.com/cssnr/link-extractor).  
-> For more details, see the [Discussion](https://github.com/cssnr/link-extractor/discussions/134).
+> For more details, join the [Discussion](https://github.com/cssnr/link-extractor/discussions/134).  
+> For progress, see the [Tracking Issue](https://github.com/cssnr/link-extractor/issues/135).
 
 Note, this is not yet ready for use but can be installed and tested.
 

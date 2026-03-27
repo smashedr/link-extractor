@@ -7,14 +7,16 @@ import { isMobile } from '@/utils/system.ts'
 import { Tooltip } from 'bootstrap'
 import FormSwitch from '@/components/FormSwitch.vue'
 
-withDefaults(
+const props = withDefaults(
   defineProps<{
     compact?: boolean
     show?: string[]
+    switches?: string[]
   }>(),
   {
     compact: false,
     show: () => ['inputs', 'switches'],
+    switches: () => [],
   },
 )
 
@@ -36,6 +38,11 @@ const toggleOptions = [
   tooltip: i18n.t(`option.toggle.${key}Tip` as any),
 }))
 console.log('toggleOptions:', toggleOptions)
+
+const visibleToggles = computed(() =>
+  props.switches.length ? toggleOptions.filter((o) => props.switches.includes(o.key)) : toggleOptions,
+)
+console.log('visibleToggles:', visibleToggles)
 
 onMounted(() => {
   // NOTE: Find a better way to enable tooltips...
@@ -70,7 +77,7 @@ onMounted(() => {
 
     <!-- switches -->
     <div v-if="show.includes('switches')" class="row m-0">
-      <template v-for="option in toggleOptions" :key="option.key">
+      <template v-for="option in visibleToggles" :key="option.key">
         <FormSwitch
           :class="{ 'col-12': true, 'col-sm-6': !compact }"
           :value="(options[option.key] as boolean) || false"

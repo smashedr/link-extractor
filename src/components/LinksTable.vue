@@ -2,8 +2,8 @@
 import { ref } from 'vue'
 import { processLinkOptions, processLinkFilters } from '@/utils/links.ts'
 import { useResults } from '@/composables/useResults.ts'
-import FilterSelect from '@/components/FilterSelect.vue'
 import { watchOptions, useOptions } from '@/composables/useOptions.ts'
+import FilterSelect from '@/components/FilterSelect.vue'
 
 console.debug('%cLOADED: components/LinksTable.vue', 'color: Orange')
 
@@ -56,6 +56,7 @@ async function onChange(filter: Filter) {
 
 <template>
   <div>
+    <!-- TODO: Make FilterSelect work outside of LinksTable -->
     <FilterSelect @change="onChange" />
     <div class="table-wrapper">
       <table id="links-table" class="table table-sm table-striped table-hover small w-100">

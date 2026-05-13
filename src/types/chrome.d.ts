@@ -1,5 +1,5 @@
-declare namespace chrome {
-  namespace sidebarAction {
-    function open(): Promise<void>
-  }
+// noinspection JSUnusedGlobalSymbols
+
+declare namespace chrome.sidebarAction {
+  function open(): void
 }

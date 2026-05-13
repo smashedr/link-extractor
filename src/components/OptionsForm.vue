@@ -1,13 +1,10 @@
 <script setup lang="ts">
-import { i18n } from '#imports'
-import { onMounted } from 'vue'
-import { useOptions } from '@/composables/useOptions.ts'
 import { saveKeyValue } from '@/utils/options.ts'
+import { useOptions } from '@/composables/useOptions.ts'
 import { isMobile } from '@/utils/system.ts'
-import { Tooltip } from 'bootstrap'
 import FormSwitch from '@/components/FormSwitch.vue'
 
-const props = withDefaults(
+withDefaults(
   defineProps<{
     compact?: boolean
     show?: string[]
@@ -16,38 +13,21 @@ const props = withDefaults(
   {
     compact: false,
     show: () => ['inputs', 'switches'],
-    switches: () => [],
+    switches: () => [
+      'removeDuplicates',
+      'defaultFilter',
+      'saveState',
+      'linksTruncate',
+      'linksNoWrap',
+      'activateLinks',
+      'extractSide',
+      'contextMenu',
+      'showUpdate',
+    ],
   },
 )
 
 const options = useOptions()
-
-const toggleOptions = [
-  'removeDuplicates',
-  'defaultFilter',
-  'saveState',
-  'linksTruncate',
-  'linksNoWrap',
-  'activateLinks',
-  'extractSide',
-  'contextMenu',
-  'showUpdate',
-].map((key) => ({
-  key,
-  label: i18n.t(`option.toggle.${key}.label` as any),
-  tooltip: i18n.t(`option.toggle.${key}.tip` as any),
-}))
-console.log('toggleOptions:', toggleOptions)
-
-const visibleToggles = computed(() =>
-  props.switches.length ? toggleOptions.filter((o) => props.switches.includes(o.key)) : toggleOptions,
-)
-console.log('visibleToggles:', visibleToggles)
-
-onMounted(() => {
-  // NOTE: Find a better way to enable tooltips...
-  document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach((el) => new Tooltip(el))
-})
 </script>
 
 <template>
@@ -77,18 +57,9 @@ onMounted(() => {
 
     <!-- switches -->
     <div v-if="show.includes('switches')" class="row m-0">
-      <template v-for="option in visibleToggles" :key="option.key">
-        <FormSwitch
-          :class="{ 'col-12': true, 'col-sm-6': !compact }"
-          :value="(options[option.key] as boolean) || false"
-          :name="option.key"
-          :label="option.label"
-          :tooltip="option.tooltip"
-          @save="saveKeyValue"
-        />
+      <template v-for="id in switches" :key="id">
+        <FormSwitch :id="id" v-model="options[id]" />
       </template>
     </div>
   </form>
 </template>
-
-<!--<style scoped></style>-->

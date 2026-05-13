@@ -15,10 +15,7 @@ withDefaults(
   },
 )
 
-const manifest = chrome.runtime.getManifest()
-console.debug('manifest:', manifest)
 const config = useAppConfig()
-console.log('config:', config)
 </script>
 
 <template>
@@ -27,32 +24,30 @@ console.log('config:', config)
       v-if="homePage"
       class="link-body-emphasis text-decoration-none d-inline-block"
       rel="noopener"
-      :href="manifest.homepage_url"
+      :href="config.githubUrl"
       target="_blank"
       @click.prevent="clickOpen"
       >{{ i18n.t('ui.homePage') }}</a
     >
-    <span class="mx-2">&bull;</span>
+    <span class="mx-2 mx-md-3">&bull;</span>
     <a
       v-if="requestFeature"
       class="link-body-emphasis text-decoration-none d-inline-block"
       rel="noopener"
-      :href="`${config.github_url}/issues/new?template=1-feature.yaml`"
+      :href="`${config.githubUrl}/issues/new?template=1-feature.yaml`"
       target="_blank"
       @click.prevent="clickOpen"
       >{{ i18n.t('ui.requestFeature') }}</a
     >
-    <span class="mx-2">&bull;</span>
+    <span class="mx-2 mx-md-3">&bull;</span>
     <a
       v-if="openIssue"
       class="link-body-emphasis text-decoration-none d-inline-block"
       rel="noopener"
-      :href="`${config.github_url}/issues`"
+      :href="`${config.githubUrl}/issues`"
       target="_blank"
       @click.prevent="clickOpen"
       >{{ i18n.t('ui.openIssue') }}</a
     >
   </div>
 </template>
-
-<!--<style scoped></style>-->

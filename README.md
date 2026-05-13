@@ -26,19 +26,22 @@
 # Link Extractor
 
 <a title="Link Extractor" href="https://link-extractor.cssnr.com/" target="_blank">
-<img alt="Link Extractor" align="right" width="128" height="auto" src="https://raw.githubusercontent.com/smashedr/link-extractor/master/public/images/logo128.png"></a>
+<img alt="Link Extractor" align="right" width="128" height="auto" src="https://raw.githubusercontent.com/smashedr/link-extractor/master/src/assets/icon.svg"></a>
 
+- [Install](#install)
 - [Development](#development)
 - [Contributing](#contributing)
+
+Note, this is not yet ready for use but can be installed and tested.
+
+[![Latest Release](https://img.shields.io/github/v/release/smashedr/link-extractor?style=for-the-badge&logo=github&label=download%20latest%20release)](https://github.com/smashedr/link-extractor/releases/latest)
 
 > [!CAUTION]  
 > Development version of [cssnr/link-extractor](https://github.com/cssnr/link-extractor).  
 > For more details, join the [Discussion](https://github.com/cssnr/link-extractor/discussions/134).  
 > For progress, see the [Tracking Issue](https://github.com/cssnr/link-extractor/issues/135).
 
-Note, this is not yet ready for use but can be installed and tested.
-
-[![Latest Release](https://img.shields.io/github/v/release/smashedr/link-extractor?style=for-the-badge&logo=github&label=download%20latest%20release)](https://github.com/smashedr/link-extractor/releases/latest)
+## Install
 
 First, Download a [GitHub release](https://github.com/smashedr/link-extractor/releases) for your browser.
 

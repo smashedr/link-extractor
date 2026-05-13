@@ -2,7 +2,7 @@ import { ref, onMounted, onUnmounted } from 'vue'
 import type { Ref } from 'vue'
 import { STORE_KEY, Filter, getFilters } from '@/utils/filters.ts'
 
-console.debug('%cLOADED: composables/useFilters.ts', 'color: Orange')
+// TODO: Overhaul - Old Composable
 
 export function fmtFilterName(filter: Filter) {
   if (filter.name) {

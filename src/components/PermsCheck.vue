@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { i18n } from '#imports'
 import { ref, onMounted, onUnmounted } from 'vue'
+import { debug } from '@/utils/logger.ts'
 import { useToast } from '@/composables/useToast.ts'
 import { clickOpen } from '@/utils/extension.ts'
 import { isFirefox } from '@/utils/system.ts'
@@ -25,43 +26,38 @@ const props = withDefaults(
 const hasPerms = ref(true)
 
 const manifest = chrome.runtime.getManifest()
-const host_permissions = manifest.optional_host_permissions
-console.debug('host_permissions:', host_permissions)
+// NOTE: origins defined: background/index.ts, background/icons.ts
+const origins = manifest.host_permissions
+// debug('PermsCheck.vue - origins:', origins)
 
 async function updatePerms() {
-  hasPerms.value = await chrome.permissions.contains({
-    origins: host_permissions,
-  })
-  console.debug('updatePerms:', hasPerms.value)
+  hasPerms.value = await chrome.permissions.contains({ origins })
+  debug('updatePerms:', hasPerms.value)
 }
 
 async function grantPerms(event: Event) {
-  console.debug('grantPerms:', event)
-  requestPerms().catch(console.log)
-  if (props.closeWindow) {
-    window.close()
-  }
+  debug('grantPerms:', event)
+  requestPerms().catch(console.warn)
+  if (props.closeWindow) window.close()
 }
 
 async function revokePerms(event: Event) {
-  console.debug('revokePerms:', event)
-  const permissions = await chrome.permissions.getAll()
-  console.debug('permissions:', permissions)
+  debug('revokePerms:', event)
+  // NOTE: This was modified to remove origins and not permissions...
   try {
-    await chrome.permissions.remove({
-      origins: permissions.origins,
-    })
+    const permissions = await chrome.permissions.getAll()
+    debug('permissions:', permissions)
+    await chrome.permissions.remove({ origins })
     await updatePerms()
   } catch (e) {
-    console.debug(e)
-    if (e instanceof Error) showToast(e.toString(), 'danger')
+    // console.error(e)
+    const message = e instanceof Error ? e.message : i18n.t('ui.error.unknown')
+    showToast(message, 'danger')
   }
 }
 
 async function requestPerms() {
-  return await chrome.permissions.request({
-    origins: host_permissions,
-  })
+  return await chrome.permissions.request({ origins })
 }
 
 onMounted(() => {
@@ -80,15 +76,16 @@ onUnmounted(() => {
   <div v-if="!hasPerms || showAlert || showRemove">
     <div v-if="!hasPerms" class="text-center d-grid gap-2">
       <button
-        class="btn btn-lg btn-success"
+        class="btn btn-lg btn-warning"
         type="button"
         data-bs-toggle="tooltip"
         data-bs-placement="top"
         data-bs-trigger="hover"
         :data-bs-title="i18n.t('ui.perms.grant.tip')"
         @click="grantPerms"
+        v-bs
       >
-        <i class="fa-solid fa-check-double me-1"></i> {{ i18n.t('ui.perms.grant.text') }}
+        <i class="fa-solid fa-check-double me-2"></i> {{ i18n.t('ui.perms.grant.text') }}
       </button>
       <p v-if="showInfo" class="text-center mb-0">
         <a href="/permissions.html" target="_blank" @click.prevent="clickOpen($event, closeWindow)">{{
@@ -97,7 +94,9 @@ onUnmounted(() => {
       </p>
     </div>
 
-    <div v-if="hasPerms && showAlert" class="alert alert-success mt-3 mb-0" role="alert">Permissions Granted.</div>
+    <div v-if="hasPerms && showAlert" class="alert alert-success mt-3 mb-0" role="alert">
+      {{ i18n.t('ui.perms.grant.text') }}
+    </div>
 
     <div v-if="hasPerms && showRemove && isFirefox">
       <button
@@ -108,11 +107,10 @@ onUnmounted(() => {
         data-bs-trigger="hover"
         :data-bs-title="i18n.t('ui.perms.remove.tip')"
         @click="revokePerms"
+        v-bs
       >
         {{ i18n.t('ui.perms.remove.text') }}
       </button>
     </div>
   </div>
 </template>
-
-<!--<style scoped></style>-->

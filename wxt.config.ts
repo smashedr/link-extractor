@@ -1,25 +1,21 @@
 import { defineConfig } from 'wxt'
 
-// NOTE: Icons are also defined in <mata> tags for:
-//    popup/index.html
-//    sidepanel/index.html
-const icons = {
-  16: 'images/logo16.png',
-  24: 'images/logo24.png',
-  32: 'images/logo32.png',
-  48: 'images/logo48.png',
-  96: 'images/logo96.png',
-  128: 'images/logo128.png',
-}
-
 // See https://wxt.dev/api/config.html
 // noinspection JSUnusedGlobalSymbols
 export default defineConfig({
   srcDir: 'src',
-  modules: ['@wxt-dev/module-vue', '@wxt-dev/i18n/module'],
+  modules: ['@wxt-dev/module-vue', '@wxt-dev/i18n/module', '@wxt-dev/auto-icons'],
 
   // https://wxt.dev/guide/essentials/config/auto-imports.html#disabling-auto-imports
   // imports: false,
+
+  autoIcons: {
+    enabled: true,
+    baseIconPath: 'assets/icon.svg',
+    developmentIndicator: false,
+    // developmentIndicator: 'overlay',
+    sizes: [96, 24], // Dfault: 128, 48, 32, 16
+  },
 
   // https://wxt.dev/guide/essentials/config/manifest.html
   manifest: ({ browser, mode }) => {
@@ -28,10 +24,9 @@ export default defineConfig({
     console.log(`isDev: ${isDev} - isFirefox: ${isFirefox}`)
 
     return {
-      icons,
       default_locale: 'en',
       name: '__MSG_name__',
-      // short_name: '__MSG_shortName__',
+      short_name: '__MSG_short_name__',
       description: '__MSG_description__',
       homepage_url: 'https://link-extractor.cssnr.com/',
 
@@ -63,28 +58,29 @@ export default defineConfig({
         ? {
             browser_specific_settings: {
               gecko: {
-                id: 'link-extractor-beta@cssnr.com',
-                strict_min_version: '112.0',
-                data_collection_permissions: {
-                  required: ['none'],
-                },
+                id: 'link-extractor-beta@cssnr.com', // TODO: UPDATE MERGE
+                strict_min_version: '112.0', // manifest - background.type
+                data_collection_permissions: { required: ['none'] },
               },
-              gecko_android: {
-                strict_min_version: '120.0',
-              },
+              gecko_android: { strict_min_version: '120.0' }, // permissions.request
             },
           }
-        : {
-            minimum_chrome_version: '88',
-          }),
+        : { minimum_chrome_version: '127' }), // chrome.action.openPopup
     }
   },
 
-  // https://wxt.dev/guide/essentials/config/browser-startup.html
-  // Override with: web-ext.config.ts
-  webExt: {
-    disabled: true,
+  // https://wxt.dev/guide/essentials/config/hooks
+  hooks: {
+    'build:manifestGenerated': (wxt, manifest) => {
+      // console.log('build:manifestGenerated:', wxt.config.browser)
+      if (manifest.action) manifest.action.default_icon = manifest.icons
+      if (manifest.sidebar_action) manifest.sidebar_action.default_icon = manifest.icons
+    },
   },
+
+  // // https://wxt.dev/guide/essentials/config/browser-startup.html
+  // // NOTE: Configured in web-ext.config.ts
+  // webExt: { disabled: true },
 
   // https://wxt.dev/guide/essentials/config/vite.html
   vite: () => ({

@@ -2,7 +2,7 @@ import { ref, onMounted, onUnmounted } from 'vue'
 import type { Ref } from 'vue'
 import { LinkData } from '@/utils/links.ts'
 
-console.debug('%cLOADED: composables/useResults.ts', 'color: Orange')
+// TODO: Overhaul - Old Composable
 
 const STORE_KEY = 'results'
 

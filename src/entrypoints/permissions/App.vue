@@ -1,26 +1,26 @@
 <script setup lang="ts">
 import { i18n } from '#imports'
+import { onMounted, onUnmounted } from 'vue'
+import { openOptions } from '@/utils/extension.ts'
 import { useTitle } from '@/composables/useTitle.ts'
 import BackToTop from '@/components/BackToTop.vue'
 import PermsCheck from '@/components/PermsCheck.vue'
 import ToastAlerts from '@/components/ToastAlerts.vue'
 import PageFooter from '@/components/PageFooter.vue'
 
-console.debug('%cLOADED permissions/App.vue', 'color: Orange')
+useTitle(i18n.t('ui.permissions.title'))
 
-chrome.permissions.onAdded.addListener(onAdded)
+const manifest = chrome.runtime.getManifest()
 
-async function onAdded(permissions: chrome.permissions.Permissions) {
-  console.debug('onAdded:', permissions)
+async function onAdded() {
   if (document.hasFocus()) {
     await chrome.runtime.openOptionsPage()
     window.close()
   }
 }
 
-const manifest = chrome.runtime.getManifest()
-
-useTitle('Permissions')
+onMounted(() => chrome.permissions.onAdded.addListener(onAdded))
+onUnmounted(() => chrome.permissions.onAdded.removeListener(onAdded))
 </script>
 
 <template>
@@ -30,7 +30,7 @@ useTitle('Permissions')
         <div class="card p-3 text-center">
           <div class="d-flex justify-content-center align-items-center">
             <img
-              src="/images/logo48.png"
+              src="@/assets/icon.svg"
               class="me-2"
               height="48"
               width="48"
@@ -42,7 +42,7 @@ useTitle('Permissions')
 
           <PermsCheck :show-alert="true" class="my-2" />
 
-          <p>To download an image on Chrome for upload to the API, host permissions are required.</p>
+          <p>{{ i18n.t('ui.permissions.reason') }}</p>
           <a class="btn btn-lg btn-outline-info w-100 mb-3" href="/options.html" @click.prevent="openOptions()">
             <i class="fa-solid fa-sliders me-1"></i> {{ i18n.t('ctx.openOptions') }}</a
           >
@@ -58,5 +58,3 @@ useTitle('Permissions')
   <ToastAlerts />
   <BackToTop />
 </template>
-
-<!--<style scoped></style>-->

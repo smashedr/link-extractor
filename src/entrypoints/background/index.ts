@@ -21,6 +21,7 @@ export default defineBackground(() => {
 })
 
 async function setUninstallURL() {
+  // TODO: Calling this function setUninstallURL breaks WXT
   const manifest = chrome.runtime.getManifest()
   if (!manifest.homepage_url) return console.warn('No manifest.homepage_url')
   const url = new URL(manifest.homepage_url)

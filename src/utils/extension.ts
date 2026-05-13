@@ -1,11 +1,11 @@
-// NOTE: Below is ported from VanillaJS
+import { debug } from '@/utils/logger.ts'
 
-import { showToast } from '@/composables/useToast.ts'
+// NOTE: All functions below are ported from VanillaJS
 
-export function openSidePanel(close?: boolean) {
-  console.debug('openSidePanel:', close)
+export function openSidePanel(close = false) {
+  debug('openSidePanel - close:', close)
   if (chrome.sidePanel) {
-    console.debug('chrome.sidePanel')
+    // debug('chrome.sidePanel')
     chrome.tabs.query({ active: true, currentWindow: true }, ([tab]) => {
       chrome.sidePanel
         .open({ windowId: tab.windowId })
@@ -15,8 +15,8 @@ export function openSidePanel(close?: boolean) {
         .catch(console.warn)
     })
   } else if (chrome.sidebarAction) {
-    console.debug('chrome.sidebarAction')
-    chrome.sidebarAction.open().catch(console.warn)
+    // debug('chrome.sidebarAction')
+    chrome.sidebarAction.open()
     if (close) window.close()
   } else {
     console.log('Side Panel Not Supported')
@@ -24,7 +24,7 @@ export function openSidePanel(close?: boolean) {
 }
 
 export function openOptions(close = false) {
-  console.debug('openOptions')
+  debug('openOptions')
   chrome.runtime
     .openOptionsPage()
     .then(() => {
@@ -34,109 +34,110 @@ export function openOptions(close = false) {
 }
 
 export async function openPage(close = false, path = 'page.html') {
-  console.debug('openPage:', path)
+  debug('openPage:', path)
   const page = chrome.runtime.getURL(path)
   await activateOrOpen(page)
   if (close) window.close()
 }
 
 export async function openPopup() {
-  console.debug('openPopup')
+  debug('openPopup')
   // Note: This fails if popup is already open (ex. double clicks)
   try {
     await chrome.action.openPopup()
   } catch (e) {
-    console.debug(e)
+    debug('catch:', e)
   }
 }
 
 export async function openExtPanel(close = false) {
-  console.debug('openExtPanel:', close)
+  debug('openExtPanel:', close)
 
   const panelPath = 'popout.html'
   const [defaultWidth, defaultHeight] = [390, 600]
   const type = chrome.windows.CreateType.POPUP
 
-  if (!chrome.windows) {
-    console.log('Browser does not support: chrome.windows')
-    showToast('Browser does not support windows', 'danger')
-    return
-  }
+  if (!chrome.windows) return console.log('Browser does not support: chrome.windows')
 
   const local = await chrome.storage.local.get([
     'lastPanelID',
     'panelWidth',
     'panelHeight',
   ])
-  console.debug('local:', local)
+  debug('local:', local)
 
-  const lastPanelID = local.lastPanelID as number
-  console.debug('lastPanelID:', lastPanelID)
+  const lastPanelID = local.lastPanelID as number | undefined
+  debug('lastPanelID:', lastPanelID)
 
   try {
-    const panel = await chrome.windows.get(lastPanelID)
-    // console.debug('panel', panel)
-    console.debug('panel?.id', panel?.id)
-    if (panel) {
-      const tabs = await chrome.tabs.query({ active: true, currentWindow: true })
-      // console.debug('tabs:', tabs)
-      console.debug('tabs[0]?.windowId:', tabs[0]?.windowId)
-      if (panel.id != tabs[0]?.windowId) {
-        console.debug('%c Window found:', 'color: SpringGreen', panel.id)
-        await chrome.windows.update(lastPanelID, { focused: true })
-        if (close) window.close()
-        return
+    if (lastPanelID) {
+      // NOTE: This throws if lastPanelID is not an existing window ID
+      const panel = await chrome.windows.get(lastPanelID)
+      // debug('panel', panel)
+      // debug('panel?.id', panel?.id)
+      if (panel?.id) {
+        const tabs = await chrome.tabs.query({ active: true, currentWindow: true })
+        // debug('tabs:', tabs)
+        // debug('tabs[0]?.windowId:', tabs[0]?.windowId)
+        if (panel.id != tabs[0]?.windowId) {
+          debug('%cPanel found:', 'color: SpringGreen', panel.id)
+          await chrome.windows.update(panel.id, { focused: true })
+          if (close) window.close()
+          return
+        }
       }
     }
   } catch (e) {
-    console.log(e)
+    debug('catch:', e)
   }
 
-  const panelWidth = local.panelWidth as number
-  console.debug('panelWidth:', panelWidth)
-  const panelHeight = local.panelHeight as number
-  console.debug('panelHeight:', panelHeight)
-  const width = panelWidth || defaultWidth
-  const height = panelHeight || defaultHeight
-  console.debug(`width, height:`, width, height)
+  const panelWidth = local.panelWidth as number | undefined
+  // debug('panelWidth:', panelWidth)
+  const panelHeight = local.panelHeight as number | undefined
+  // debug('panelHeight:', panelHeight)
+  const width = panelWidth || defaultWidth // NOSONAR
+  const height = panelHeight || defaultHeight // NOSONAR
+  // debug(`width, height:`, width, height)
   const url = chrome.runtime.getURL(panelPath)
-  console.debug('url:', url)
+  // debug('url:', url)
   const panel = await chrome.windows.create({ type, url, width, height })
-  console.debug('panel:', panel)
+  // debug('panel:', panel)
   if (panel) {
-    console.debug(`%c Created new window: ${panel.id}`, 'color: Magenta')
+    debug(`%cCreated new window: ${panel.id}`, 'color: Magenta')
     chrome.storage.local.set({ lastPanelID: panel.id }).catch(console.warn)
   }
   if (close) window.close()
 }
 
 export async function activateOrOpen(url: string, open = true) {
-  console.debug('activateOrOpen:', url, open)
+  debug('activateOrOpen:', url, open)
   // Note: To Get Tab from Tabs (requires host permissions or tabs)
   const tabs = await chrome.tabs.query({ currentWindow: true })
-  console.debug('tabs:', tabs)
+  // debug('tabs:', tabs)
   for (const tab of tabs) {
     if (tab.url === url) {
-      console.debug('%cTab found, activating:', 'color: Lime', tab)
+      debug('%cTab found, activating:', 'color: Lime', tab)
       return await chrome.tabs.update(tab.id, { active: true })
     }
   }
   if (open) {
-    console.debug('%cTab not found, opening url:', 'color: Yellow', url)
+    debug('%cTab not found, opening url:', 'color: Yellow', url)
     return await chrome.tabs.create({ active: true, url })
   }
-  console.warn('tab not found and open not set!')
+  console.warn('tab not found and open not set for url:', url)
 }
 
 export function clickOpen(e: Event, close = false) {
   const target = e.currentTarget as HTMLAnchorElement
   let url = target.href
-  console.log('clickOpen:', close, url)
+  debug('clickOpen:', close, url)
   if (!url || url === '#') return
   if (url.startsWith('/')) {
     url = chrome.runtime.getURL(url)
   }
-  activateOrOpen(url).then(() => {
-    if (close || target.dataset.close === 'true') window.close()
-  })
+  activateOrOpen(url)
+    .then(() => {
+      if (close || target.dataset.close === 'true') window.close()
+    })
+    .catch(console.warn)
 }

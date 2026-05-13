@@ -7,7 +7,7 @@ import { i18n } from '#imports'
     <a
       class="link-body-emphasis text-decoration-none"
       id="bs-theme-dropdown"
-      title="Theme Switcher"
+      :title="i18n.t('ui.theme.title')"
       role="button"
       data-bs-toggle="dropdown"
       aria-expanded="false"
@@ -38,5 +38,3 @@ import { i18n } from '#imports'
   </div>
   <!-- dropdown -->
 </template>
-
-<!--<style scoped></style>-->

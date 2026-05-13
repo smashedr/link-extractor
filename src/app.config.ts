@@ -1,19 +1,27 @@
-import { i18n, defineAppConfig } from '#imports'
+// https://wxt.dev/guide/essentials/config/runtime.html
+// noinspection JSUnusedGlobalSymbols
+
+import { defineAppConfig } from '#imports'
+
+// NOTE: To avoid defining manifest and config or having duplication...
+const manifest = chrome.runtime.getManifest()
 
 declare module 'wxt/utils/define-app-config' {
-  // noinspection JSUnusedGlobalSymbols
   export interface WxtAppConfig {
-    // name: string
-    short_name: string
-    // homepage_url: string
-    github_url: string
+    name: string
+    shortName: string
+    version: string
+    githubUrl: string
+    homepageUrl: string
+    uninstallUrl: string
   }
 }
 
-// noinspection JSUnusedGlobalSymbols
 export default defineAppConfig({
-  // name: i18n.t('name'), // DUPLICATION from Manifest
-  short_name: i18n.t('shortName'),
-  // homepage_url: 'https://link-extractor.cssnr.com/', // DUPLICATION from Manifest
-  github_url: 'https://github.com/cssnr/link-extractor',
+  name: manifest.name,
+  shortName: manifest.short_name || manifest.name, // NOSONAR
+  version: manifest.version,
+  githubUrl: 'https://github.com/cssnr/link-extractor', // TODO: UPDATE MERGE
+  homepageUrl: manifest.homepage_url ?? '',
+  uninstallUrl: 'https://link-extractor.cssnr.com/uninstall/',
 })

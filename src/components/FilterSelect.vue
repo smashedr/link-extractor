@@ -1,6 +1,7 @@
 <script setup lang="ts">
+import { ref } from 'vue'
 import { fmtFilterName, useFilters } from '@/composables/useFilters.ts'
-import { Filter } from '@/utils/filters.ts'
+import type { Filter } from '@/utils/filters.ts'
 
 const emit = defineEmits(['change'])
 

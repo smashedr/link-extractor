@@ -52,9 +52,11 @@ async function extractLinks() {
           {{ i18n.t('ui.filters.filters') }}
         </button>
         <ul class="dropdown-menu overflow-y-auto overflow-x-hidden">
-          <li v-if="filters?.length" v-for="filter of filters">
-            <a class="dropdown-item text-truncate" href="#">{{ fmtFilterName(filter) }}</a>
-          </li>
+          <template v-if="filters?.length">
+            <li v-for="filter of filters" :key="filter.id">
+              <a class="dropdown-item text-truncate" href="#">{{ fmtFilterName(filter) }}</a>
+            </li>
+          </template>
           <li v-else>
             <a class="dropdown-item" href="/options.html" @click.prevent="openOptions(props.closeWindow)">{{
               i18n.t('ui.filters.noSaved')

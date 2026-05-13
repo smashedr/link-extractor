@@ -1,17 +1,19 @@
 import { i18n } from '#imports'
-import { Options } from '@/utils/options.ts'
+import { debug } from '@/utils/logger.ts'
+
+// TODO: The menus.ts was copied from another app and DOES NOT WORK as expected...
 
 const config: chrome.contextMenus.CreateProperties[] = [
   { contexts: ['link'], id: 'copyText' },
-  { contexts: ['all'], id: 'copyLinks' },
+  { contexts: ['action', 'page'], id: 'copyLinks' },
   { contexts: ['selection'], id: 'copySelection' },
   { contexts: ['selection'], id: 'extSelection' },
-  { contexts: ['all'], id: 'separator' },
-  { contexts: ['all'], id: 'extLinks' },
-  { contexts: ['all'], id: 'extFilter' },
-  { contexts: ['all'], id: 'extDomains' },
-  { contexts: ['all'], id: 'separator' },
-  { contexts: ['all'], id: 'openOptions' },
+  { contexts: ['action', 'page'], id: 'separator' },
+  { contexts: ['action', 'page'], id: 'extLinks' },
+  { contexts: ['action', 'page'], id: 'extFilter' },
+  { contexts: ['action', 'page'], id: 'extDomains' },
+  { contexts: ['action', 'page'], id: 'separator' },
+  { contexts: ['action', 'page'], id: 'openOptions' },
 ]
 
 const contexts: chrome.contextMenus.CreateProperties[] = config.map((entry) => ({
@@ -21,12 +23,22 @@ const contexts: chrome.contextMenus.CreateProperties[] = config.map((entry) => (
     : { title: i18n.t(`ctx.${entry.id}` as any) }),
 }))
 
-export async function createContextMenus(options: Options) {
-  console.log('createContextMenus:', options)
-  if (!options.contextMenu) return console.log('Disabled: options.contextMenu')
-  if (!chrome.contextMenus) return console.log('Unsupported: chrome.contextMenus')
-  await chrome.contextMenus.removeAll()
-  contexts.forEach((item) => {
-    chrome.contextMenus.create(item)
+export async function updateContextMenus(enabled?: boolean) {
+  debug('updateContextMenus - enabled:', enabled)
+  if (!chrome.contextMenus) return console.log('Skipping: chrome.contextMenus')
+
+  chrome.contextMenus.removeAll().then(() => {
+    contexts.forEach((item) => {
+      const entry = { ...item }
+      const contexts = [...(entry.contexts ?? [])]
+      // debug('contexts:', contexts)
+      if (!enabled) {
+        const idx = contexts?.indexOf('page')
+        if (idx !== undefined && idx != -1) contexts?.splice(idx, 1)
+      }
+      entry.contexts = contexts as [chrome.contextMenus.ContextType]
+      // debug(`entry: ${entry.id}`, entry.contexts)
+      chrome.contextMenus.create(entry)
+    })
   })
 }

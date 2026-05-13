@@ -1,5 +1,5 @@
 name: Link Extractor
-shortName: LinkEx
+short_name: Link Extractor
 description: Easily extract all links/domains from tabs/text with optional filters. Allows opening, copying, sorting, downloading, and more...
 
 ui:
@@ -10,7 +10,11 @@ ui:
   openIssue: Open Issue
   noTabAccess: No Access to the Current Tab.
 
+  error:
+    unknown: Unknown Error
+
   theme:
+    title: Theme Switcher
     dark: Dark
     light: Light
     auto: Auto
@@ -51,6 +55,10 @@ ui:
       text: Remove Host Permissions
       tip: You will no longer be able to analyze new images
     info: More Information on Permissions
+
+  permissions:
+    title: Permissions
+    reason: To intercept authentication requests, hosts permissions are required.
 
 options:
   # options/App.vue

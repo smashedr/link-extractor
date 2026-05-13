@@ -1,5 +1,7 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
+import type { Options } from '@/utils/options.ts'
+import type { Filter } from '@/utils/filters.ts'
 import { processLinkOptions, processLinkFilters } from '@/utils/links.ts'
 import { useResults } from '@/composables/useResults.ts'
 import { watchOptions, useOptions } from '@/composables/useOptions.ts'
@@ -66,9 +68,11 @@ async function onChange(filter: Filter) {
           </tr>
         </thead>
         <tbody id="links-body">
-          <tr v-if="linksRef?.length" v-for="link of linksRef">
-            <td>{{ link.href }}</td>
-          </tr>
+          <template v-if="linksRef?.length">
+            <tr v-for="link of linksRef" :key="link">
+              <td>{{ link.href }}</td>
+            </tr>
+          </template>
           <tr v-else>
             <td class="text-muted fw-bold">No Links Extracted</td>
           </tr>

@@ -1,3 +1,5 @@
+import { debug } from '@/utils/logger.ts'
+
 export const defaultOptions = {
   linksDisplay: -1,
   flags: 'ig',
@@ -29,11 +31,11 @@ export async function getOptions(): Promise<Options> {
 
 // NOTE: This is a WIP to replace the VanillaJS saveOptions
 export async function saveKeyValue(key: string, value: any) /* NOSONAR */ {
-  console.debug(`saveKeyValue: ${key}:`, value)
-  if (!key || value === undefined) return
+  // debug(`saveKeyValue: ${key}:`, value)
+  if (!key || value === undefined) return debug('no key or value')
   const options = await getOptions()
-  if (options[key] === value) return
+  if (options[key] === value) return debug('value not changed')
   options[key] = value
-  console.log(`Set %c${key}:`, 'color: Lime', value)
+  debug(`Set %c${key}:`, 'color: Lime', value)
   await chrome.storage.sync.set({ options })
 }

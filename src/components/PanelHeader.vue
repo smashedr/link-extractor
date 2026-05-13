@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { i18n } from '#imports'
-import { clickOpen, openExtPanel, openOptions, openPage, openPopup, openSidePanel } from '@/utils/extension.ts'
+import { i18n, useAppConfig } from '#imports'
 import { isMobile } from '@/utils/system.ts'
+import { clickOpen, openExtPanel, openOptions, openPage, openPopup, openSidePanel } from '@/utils/extension.ts'
 import ThemeSwitch from '@/components/ThemeSwitch.vue'
 
 withDefaults(
@@ -12,21 +12,20 @@ withDefaults(
     popupButton?: boolean
     optionsButton?: boolean
     closeWindow?: boolean
+    icon?: boolean
   }>(),
   {
     panelButton: true,
-    pageButton: true,
+    pageButton: false,
     sideButton: true,
     popupButton: true,
     optionsButton: true,
     closeWindow: false,
+    icon: true,
   },
 )
 
-const manifest = chrome.runtime.getManifest()
-console.log('manifest:', manifest)
 const config = useAppConfig()
-console.log('config:', config)
 </script>
 
 <template>
@@ -38,24 +37,23 @@ console.log('config:', config)
         <a
           :title="i18n.t('ui.homePage')"
           class="link-body-emphasis text-decoration-none fs-4"
-          :href="manifest.homepage_url"
+          :href="config.githubUrl"
           target="_blank"
           @click.prevent="clickOpen($event, closeWindow)"
         >
-          <img src="/images/logo32.png" alt="L" class="mb-1" style="height: 1.1em" />
-          {{ config.short_name }}</a
+          <img v-if="icon" src="@/assets/icon.svg" alt="L" class="mb-1" style="height: 1.1em" />
+          {{ config.shortName }}</a
         >
         <a
           :title="i18n.t('ui.releaseNotes')"
           class="link-body-emphasis text-decoration-none small ms-1"
-          :href="`${config.github_url}/releases/tag/${manifest.version}`"
+          :href="`${config.githubUrl}/releases/tag/${config.version}`"
           target="_blank"
           @click.prevent="clickOpen($event, closeWindow)"
         >
-          v<span class="version">{{ manifest.version }}</span></a
+          v<span class="version">{{ config.version }}</span></a
         >
       </div>
-      <!-- flex-grow-1 -->
 
       <div v-if="pageButton" class="ms-1">
         <a
@@ -106,9 +104,6 @@ console.log('config:', config)
       </div>
     </div>
   </div>
-  <!-- container-fluid -->
 
   <hr class="my-0" />
 </template>
-
-<!--<style scoped></style>-->

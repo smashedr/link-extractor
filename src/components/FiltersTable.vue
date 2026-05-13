@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { i18n } from '#imports'
+import { ref } from 'vue'
 import { addFilter, deleteFilter, Filter } from '@/utils/filters.ts'
 import { useFilters } from '@/composables/useFilters.ts'
 import { showToast } from '@/composables/useToast.ts'
@@ -89,17 +90,19 @@ async function confirmDelete(filter: Filter) {
           </tr>
         </thead>
         <tbody id="links-body">
-          <tr v-if="filters?.length" v-for="filter of filters">
-            <td class="bg-transparent text-truncate">{{ filter.regex }}</td>
-            <td class="bg-transparent text-truncate" :class="{ 'text-muted': !filter.name }">
-              {{ filter.name || 'not set' }}
-            </td>
-            <td class="bg-transparent">
-              <a @click.prevent="openDeleteModal(filter)" title="Delete" class="link-danger" role="button" href="#"
-                ><i class="fa-regular fa-trash-can"></i
-              ></a>
-            </td>
-          </tr>
+          <template v-if="filters?.length">
+            <tr v-for="filter of filters" :key="filter.id">
+              <td class="bg-transparent text-truncate">{{ filter.regex }}</td>
+              <td class="bg-transparent text-truncate" :class="{ 'text-muted': !filter.name }">
+                {{ filter.name || 'not set' }}
+              </td>
+              <td class="bg-transparent">
+                <a @click.prevent="openDeleteModal(filter)" title="Delete" class="link-danger" role="button" href="#"
+                  ><i class="fa-regular fa-trash-can"></i
+                ></a>
+              </td>
+            </tr>
+          </template>
           <tr v-else>
             <td class="bg-transparent text-center text-muted fw-bold" colspan="3">
               {{ i18n.t('ui.filters.noSaved') }}

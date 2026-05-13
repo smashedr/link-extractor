@@ -1,25 +1,29 @@
 <script setup lang="ts">
 import { i18n } from '#imports'
-import OptionsModal from '@/components/OptionsModal.vue'
+import { openOptions } from '@/utils/extension.ts'
 
 const closeWindow = () => window.close()
 </script>
 
 <template>
-  <div class="p-1">
+  <div class="p-1 pt-0">
     <div class="d-flex flex-row justify-content-end gap-2">
-      <OptionsModal class="btn-sm btn-outline-primary me-auto"
-        ><i class="fa-solid fa-toggle-off me-2"></i> {{ i18n.t('ui.action.showOptions') }}</OptionsModal
+      <a
+        :title="i18n.t('ui.action.showOptions')"
+        class="btn btn-sm btn-outline-info hvr-grow-sm"
+        href="/options.html"
+        target="_blank"
+        @click.prevent="openOptions()"
       >
+        <i class="fa-solid fa-gears"></i> {{ i18n.t('ui.options') }}
+      </a>
       <button
         :title="i18n.t('ui.action.close')"
         class="btn btn-sm btn-outline-warning hvr-grow-sm"
         @click="closeWindow()"
       >
-        {{ i18n.t('ui.action.close') }} <i class="fa-regular fa-circle-xmark"></i>
+        <i class="fa-regular fa-circle-xmark"></i> {{ i18n.t('ui.action.close') }}
       </button>
     </div>
   </div>
 </template>
-
-<!--<style scoped></style>-->
